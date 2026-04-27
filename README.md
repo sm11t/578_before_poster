@@ -73,9 +73,8 @@ The committed JSONs already work — you only need to do this if you want to cha
 | Dataset | Source | Where it goes |
 |---|---|---|
 | Lichess June 2016 games (4.4 GB) | <https://www.kaggle.com/datasets/arevel/chess-games> | `data2/chess_games.csv` |
-| All Chess Openings (940 KB) | <https://www.kaggle.com/datasets/alexandrelemercier/all-chess-openings> | `data1/openings.csv`, `data1/openings_fen7.csv` |
 
-The pipeline only requires **chess_games.csv**. The opening reference dataset is provided for further exploration (it is not used by the canonical 12 charts).
+The pipeline only requires **chess_games.csv**.
 
 ### 2. Install Python dependencies
 
