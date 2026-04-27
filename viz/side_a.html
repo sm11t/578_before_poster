@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Side A — Color is Destiny</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0d14; --panel:#10141d; --ink:#eef1f6; --mute:#7d8597;
+    --white:#f1f1f1; --black:#3b3f4c; --draw:#7d8597;
+    --grid:#1d2230; --aSide:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;}
+  .topnav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;
+          align-items:center;padding:12px 28px;background:rgba(10,13,20,0.92);
+          backdrop-filter:blur(8px);border-bottom:1px solid var(--grid);}
+  .topnav a{color:var(--mute);text-decoration:none;font-size:13px;}
+  .topnav a:hover{color:var(--ink);}
+  .topnav .title{font-weight:700;color:var(--ink);font-size:14px;}
+  .topnav .opp{color:#5fb1ff;}
+
+  .hero{padding:96px 32px 80px;text-align:center;
+        background:radial-gradient(ellipse at top,#15191e 0%,#0a0d14 70%);
+        border-bottom:1px solid var(--grid);}
+  .hero .kicker{color:var(--mute);font-size:13px;text-transform:uppercase;letter-spacing:.16em;}
+  .hero h1{font-size:64px;font-weight:800;letter-spacing:-.02em;margin:14px auto;max-width:880px;}
+  .hero h1 em{font-style:normal;color:#fff;text-shadow:0 0 32px rgba(255,255,255,.4);}
+  .hero p.sub{max-width:680px;margin:14px auto 0;color:#cbd1de;font-size:18px;}
+  .hero .scroll-cue{margin-top:48px;color:var(--mute);font-size:12px;letter-spacing:.16em;}
+  .hero .scroll-cue::after{content:" ↓";}
+
+  /* scrollytelling sections */
+  section.beat{display:grid;grid-template-columns:380px 1fr;gap:48px;
+               max-width:1180px;margin:0 auto;padding:80px 32px;align-items:center;
+               opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s ease;}
+  section.beat.visible{opacity:1;transform:translateY(0);}
+  section.beat .narrative h2{font-size:30px;margin:0 0 12px;letter-spacing:-.01em;line-height:1.15;}
+  section.beat .narrative .num{font-size:54px;font-weight:800;color:var(--aSide);line-height:1;
+                                margin:8px 0 14px;}
+  section.beat .narrative p{color:#cbd1de;margin:0 0 12px;font-size:15.5px;}
+  section.beat .chart{background:var(--panel);border:1px solid var(--grid);
+                       border-radius:14px;padding:22px;}
+  section.beat .chart h3{margin:0 0 10px;font-size:13px;color:var(--mute);
+                          text-transform:uppercase;letter-spacing:.1em;}
+  section.beat .chart svg{width:100%;height:auto;display:block;overflow:visible;}
+  .axis line,.axis path{stroke:#2a3140;}
+  .axis text{fill:var(--mute);font-size:11px;}
+  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--mute);margin-top:10px;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;}
+  .interactive{padding:8px 12px;background:#0d121a;border-radius:8px;font-size:12px;color:#cbd1de;margin-top:10px;}
+  .interactive::before{content:"⌘ ";color:#ffffff;}
+
+  /* tooltip */
+  .tt{position:fixed;pointer-events:none;background:#1a1f2a;border:1px solid #2a3140;
+       padding:6px 10px;border-radius:6px;font-size:12px;color:var(--ink);
+       opacity:0;transition:opacity .12s;z-index:200;}
+  .tt.show{opacity:1;}
+
+  .filter-row{margin:8px 0 16px;display:flex;gap:8px;flex-wrap:wrap;}
+  .pill{padding:6px 12px;background:#0d121a;border:1px solid var(--grid);
+        border-radius:999px;font-size:12px;color:var(--mute);cursor:pointer;user-select:none;}
+  .pill:hover{color:var(--ink);}
+  .pill.active{background:#fff;color:#0a0d14;border-color:#fff;}
+
+  .climax{padding:96px 32px;text-align:center;background:#0a0d14;border-top:1px solid var(--grid);
+          border-bottom:1px solid var(--grid);}
+  .climax h2{font-size:38px;margin:0 0 12px;font-weight:800;}
+  .climax .num{font-size:96px;color:#fff;font-weight:800;line-height:1;margin:8px 0;}
+  .climax p{color:#cbd1de;max-width:600px;margin:6px auto 0;}
+
+  .next{padding:64px 32px;text-align:center;}
+  .next a{display:inline-block;padding:18px 36px;background:#0c1f33;color:#5fb1ff;
+          text-decoration:none;border-radius:14px;border:1px solid #1d3a5e;font-weight:700;font-size:16px;}
+  .next a:hover{background:#0e2742;}
+
+  @media (max-width:900px){
+    section.beat{grid-template-columns:1fr;}
+    .hero h1{font-size:42px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="index.html">← Back to overview</a>
+  <span class="title">Side A · <em style="color:#fff">Color is Destiny</em></span>
+  <a href="side_b.html" class="opp">See Side B →</a>
+</div>
+
+<div class="hero">
+  <div class="kicker">Side A · 1,797,006 games · Lichess · Elo 1000–1599</div>
+  <h1>White wins. <em>Always</em>. The first-move advantage is real.</h1>
+  <p class="sub">In 1.8 million chess games at the level where most people play, White wins about 50 of every 100 games and Black wins only 46. Three-point-nine percentage points doesn't sound like much. Stretched across 6 million games, it's tens of thousands of decided games — and the gap is visible at every cut we tested.</p>
+  <div class="scroll-cue">SCROLL TO INVESTIGATE</div>
+</div>
+
+<!-- ============ BEAT 1: A1 headline bar ============ -->
+<section class="beat" id="b1">
+  <div class="narrative">
+    <h2>The headline.</h2>
+    <div class="num">+3.9 pp</div>
+    <p>The simplest test in chess: count who wins. Across every game in our dataset, the bar on the right tells the whole story.</p>
+    <p>White wins about <strong>50%</strong> of the time. Black wins about <strong>46%</strong>. Draws, on Lichess at this level, are rare — only about 3 in 100. The gap is small per game but enormous in expectation.</p>
+  </div>
+  <div class="chart">
+    <h3>A1 · The headline (1.8M games)</h3>
+    <svg id="A1" viewBox="0 0 540 240"></svg>
+    <div class="legend">
+      <span><i style="background:#f1f1f1"></i>White wins</span>
+      <span><i style="background:#7d8597"></i>Draw</span>
+      <span><i style="background:#3b3f4c"></i>Black wins</span>
+    </div>
+    <div class="interactive">Hover any bar for exact game counts.</div>
+  </div>
+</section>
+
+<!-- ============ BEAT 2: A2 line by elo ============ -->
+<section class="beat" id="b2">
+  <div class="narrative">
+    <h2>It holds at every skill level.</h2>
+    <p>If first-move advantage were just beginner luck, we'd see the gap shrink as players improved.</p>
+    <p>It doesn't. White wins more at <strong>Elo 1000</strong>, more at <strong>1200</strong>, and more at <strong>1400</strong>. The line climbs slightly from +2.5pp to +3.9pp — preparation actually <em>magnifies</em> the advantage as players learn theory.</p>
+  </div>
+  <div class="chart">
+    <h3>A2 · Edge across Elo bands</h3>
+    <svg id="A2" viewBox="0 0 540 280"></svg>
+    <div class="legend">
+      <span><i style="background:#f1f1f1"></i>White wins</span>
+      <span><i style="background:#7d8597"></i>Draw</span>
+      <span><i style="background:#3b3f4c"></i>Black wins</span>
+    </div>
+    <div class="interactive">Hover the lines for game counts per band.</div>
+  </div>
+</section>
+
+<!-- ============ BEAT 3: A3 stacked bars by time control ============ -->
+<section class="beat" id="b3">
+  <div class="narrative">
+    <h2>It survives any time control.</h2>
+    <p>Maybe the advantage only shows up in slow games where preparation matters? No. We tested across <strong>bullet, blitz, rapid, and classical</strong>.</p>
+    <p>White wins more in every bucket. Rapid actually shows the <em>biggest</em> gap (+4.7pp), and even bullet — where everyone is just slamming pieces — gives White +3.4pp. <strong>You can't escape it by changing the clock.</strong></p>
+  </div>
+  <div class="chart">
+    <h3>A3 · Edge across time controls</h3>
+    <svg id="A3" viewBox="0 0 540 280"></svg>
+    <div class="legend">
+      <span><i style="background:#f1f1f1"></i>White</span>
+      <span><i style="background:#7d8597"></i>Draw</span>
+      <span><i style="background:#3b3f4c"></i>Black</span>
+    </div>
+    <div class="interactive">Click a time-control to jump to its rope on the tug-of-war below.</div>
+  </div>
+</section>
+
+<!-- ============ BEAT 4: A4 White's weapons treemap ============ -->
+<section class="beat" id="b4">
+  <div class="narrative">
+    <h2>White's strongest weapons.</h2>
+    <p>Some openings make the first-move advantage explode. Sharp tactical openings — <strong>Bishop's Opening</strong>, <strong>Italian Game</strong>, <strong>Philidor Defense</strong>, <strong>Ruy Lopez</strong> — all give White over <strong>52% wins</strong>.</p>
+    <p>The Bishop's Opening alone hits <strong>54.4%</strong>. That's a 12pp gap over Black. If you want White's edge to be undeniable, this is where it lives.</p>
+  </div>
+  <div class="chart">
+    <h3>A4 · White's strongest opening families (treemap)</h3>
+    <svg id="A4" viewBox="0 0 540 360"></svg>
+    <div class="legend">
+      <span>Size = games · Brightness = White win %</span>
+    </div>
+    <div class="interactive">Hover any tile for opening name + exact win rate.</div>
+  </div>
+</section>
+
+<!-- ============ BEAT 5: A5 mate heatmap ============ -->
+<section class="beat" id="b5">
+  <div class="narrative">
+    <h2>White doesn't just win — White checkmates.</h2>
+    <p>This heatmap shows the rate at which <em>White checkmates Black</em> (not the other way around) across the 10 most popular openings and 3 Elo bands.</p>
+    <p>The pattern is consistent: White delivers mate roughly twice as often as Black does in the popular openings. Brighter cells = more decisive White attacks. Dark side. Real edge.</p>
+  </div>
+  <div class="chart">
+    <h3>A5 · White's mate rate · opening × Elo</h3>
+    <svg id="A5" viewBox="0 0 540 320"></svg>
+    <div class="interactive">Hover cells for game count + mate rate.</div>
+  </div>
+</section>
+
+<!-- ============ BEAT 6: A6 INNOVATIVE — Tug of War ============ -->
+<section class="beat" id="b6">
+  <div class="narrative">
+    <h2>Tug of war. White on every rope.</h2>
+    <p>This is the proof, distilled. Every horizontal strip is a different cut of the data — by time control, by Elo, by opening family. The <strong>red marker</strong> is White's edge over Black, in percentage points.</p>
+    <p><strong>Every single rope</strong> pulls toward White. Even on Lichess bullet at the lowest Elo we measured, even in the Scandinavian where Black has solid theory — White wins more.</p>
+    <p class="interactive" style="margin-top:14px">Hover any row for the precise gap. Click filters above to explore the same data live.</p>
+  </div>
+  <div class="chart">
+    <h3>A6 · Tug-of-war · innovative view</h3>
+    <div class="filter-row" id="tug-filters">
+      <span class="pill active" data-filter="all">All cuts</span>
+      <span class="pill" data-filter="tc">Time control only</span>
+      <span class="pill" data-filter="elo">Elo only</span>
+      <span class="pill" data-filter="opening">Openings only</span>
+    </div>
+    <svg id="A6" viewBox="0 0 540 460"></svg>
+    <div class="legend">
+      <span><i style="background:#f1f1f1"></i>Tug toward White</span>
+      <span><i style="background:#3b3f4c"></i>Tug toward Black</span>
+    </div>
+  </div>
+</section>
+
+<div class="climax">
+  <p style="color:var(--mute);font-size:13px;text-transform:uppercase;letter-spacing:.16em;">The bottom line</p>
+  <h2>Across every cut. Every Elo. Every clock. Every weapon.</h2>
+  <div class="num">White</div>
+  <p>The first-move advantage is real, measurable, and undeniable. The data says: <strong>your color is destiny.</strong></p>
+</div>
+
+<div class="next">
+  <p style="color:var(--mute);margin:0 0 16px;">Not convinced? Read the other side.</p>
+  <a href="side_b.html">See Side B → "Color is Irrelevant"</a>
+</div>
+
+<div class="tt" id="tooltip"></div>
+
+<script>
+const F=(n,d=1)=>(+n).toFixed(d);
+const COL = {white:'#f1f1f1', draw:'#7d8597', black:'#3b3f4c'};
+const tt = document.getElementById('tooltip');
+function showTip(html, x, y){ tt.innerHTML=html; tt.style.left=(x+12)+'px'; tt.style.top=(y+12)+'px'; tt.classList.add('show'); }
+function hideTip(){ tt.classList.remove('show'); }
+
+// Scroll-to-reveal
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.15});
+document.querySelectorAll('section.beat').forEach(s=>obs.observe(s));
+
+Promise.all([
+  d3.json('data_color/A1_headline.json'),
+  d3.json('data_color/A2_elo.json'),
+  d3.json('data_color/A3_tc.json'),
+  d3.json('data_color/A4_white_weapons.json'),
+  d3.json('data_color/A5_mate_heatmap.json'),
+  d3.json('data_color/A6_tug_of_war.json'),
+]).then(([A1,A2,A3,A4,A5,A6])=>{
+  drawA1(A1); drawA2(A2); drawA3(A3); drawA4(A4); drawA5(A5); drawA6(A6);
+});
+
+// ===== A1 horizontal bars (animated) + tooltip =====
+function drawA1(data){
+  const W=540,H=240,M={t:30,r:30,b:30,l:90};
+  const svg=d3.select('#A1');
+  const labels={white_win:'White wins',draw:'Draw',black_win:'Black wins'};
+  const colors={white_win:COL.white,draw:COL.draw,black_win:COL.black};
+  const y=d3.scaleBand().domain(data.map(d=>d.outcome)).range([M.t,H-M.b]).padding(0.25);
+  const x=d3.scaleLinear().domain([0,55]).range([M.l,W-M.r]);
+  svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},${M.t})`).call(d3.axisLeft(y).tickFormat(d=>labels[d]));
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+'%'));
+  svg.selectAll('rect').data(data).join('rect')
+    .attr('x',M.l).attr('y',d=>y(d.outcome)).attr('height',y.bandwidth())
+    .attr('fill',d=>colors[d.outcome]).attr('opacity',0.9)
+    .attr('width',0)
+    .on('mousemove',(ev,d)=>showTip(`<b>${labels[d.outcome]}</b><br>${F(d.pct)}% · ${d.games.toLocaleString()} games`, ev.clientX, ev.clientY))
+    .on('mouseout',hideTip)
+    .transition().duration(900).delay((d,i)=>i*200).attr('width',d=>x(d.pct)-M.l);
+  svg.selectAll('text.v').data(data).join('text').attr('class','v')
+    .attr('x',d=>x(d.pct)+8).attr('y',d=>y(d.outcome)+y.bandwidth()/2+4)
+    .attr('fill','#fff').attr('font-size',13).attr('font-weight',600)
+    .text(d=>F(d.pct)+'%').attr('opacity',0)
+    .transition().delay((d,i)=>900+i*200).duration(400).attr('opacity',1);
+}
+
+// ===== A2 multi-line by Elo (animated reveal) =====
+function drawA2(data){
+  const W=540,H=280,M={t:20,r:30,b:35,l:46};
+  const svg=d3.select('#A2');
+  const x=d3.scaleLinear().domain(d3.extent(data,d=>d.elo_band)).range([M.l,W-M.r]);
+  const y=d3.scaleLinear().domain([0,60]).range([H-M.b,M.t]);
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).ticks(3).tickFormat(d=>'Elo '+d));
+  svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+'%'));
+  const series=[
+    {k:'white_pct',c:COL.white,label:'White'},
+    {k:'draw_pct', c:COL.draw, label:'Draw'},
+    {k:'black_pct',c:COL.black,label:'Black'},
+  ];
+  series.forEach(s=>{
+    const line=d3.line().x(d=>x(d.elo_band)).y(d=>y(d[s.k])).curve(d3.curveMonotoneX);
+    const path=svg.append('path').datum(data).attr('fill','none').attr('stroke',s.c).attr('stroke-width',2.5).attr('d',line);
+    const len = path.node().getTotalLength();
+    path.attr('stroke-dasharray',len).attr('stroke-dashoffset',len)
+        .transition().delay(200).duration(1200).attr('stroke-dashoffset',0);
+    svg.selectAll(null).data(data).enter().append('circle')
+      .attr('cx',d=>x(d.elo_band)).attr('cy',d=>y(d[s.k])).attr('r',4).attr('fill',s.c)
+      .style('cursor','pointer')
+      .on('mousemove',(ev,d)=>showTip(`<b>Elo ${d.elo_band} · ${s.label}</b><br>${F(d[s.k])}% · ${d.games.toLocaleString()} games`, ev.clientX, ev.clientY))
+      .on('mouseout',hideTip);
+  });
+}
+
+// ===== A3 stacked bars (interactive) =====
+function drawA3(data){
+  const W=540,H=280,M={t:20,r:20,b:50,l:60};
+  const svg=d3.select('#A3');
+  const x=d3.scaleBand().domain(data.map(d=>d.tc_bucket)).range([M.l,W-M.r]).padding(0.3);
+  const y=d3.scaleLinear().domain([0,100]).range([H-M.b,M.t]);
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x));
+  svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+'%'));
+  data.forEach(d=>{
+    let cum=0;
+    // invisible click overlay for the whole column (cross-chart link)
+    svg.append('rect').attr('x',x(d.tc_bucket)).attr('width',x.bandwidth())
+      .attr('y',M.t).attr('height',H-M.b-M.t).attr('fill','transparent')
+      .style('cursor','pointer')
+      .on('click',()=>{
+        document.getElementById('b6').scrollIntoView({behavior:'smooth', block:'center'});
+        const cap = d.tc_bucket.charAt(0).toUpperCase()+d.tc_bucket.slice(1);
+        setTimeout(()=>highlightTugRow(cap), 700);
+      });
+    [['white_pct',COL.white,'White'],['draw_pct',COL.draw,'Draw'],['black_pct',COL.black,'Black']].forEach(([k,c,lbl])=>{
+      const r = svg.append('rect').attr('x',x(d.tc_bucket)).attr('width',x.bandwidth())
+        .attr('y',y(0)).attr('height',0).attr('fill',c).attr('opacity',0.9)
+        .style('pointer-events','none');
+      r.transition().delay(200+cum*8).duration(700).attr('y',y(cum+d[k])).attr('height',y(cum)-y(cum+d[k]));
+      if(d[k]>3) svg.append('text').attr('x',x(d.tc_bucket)+x.bandwidth()/2).attr('y',y(cum+d[k]/2)+4)
+        .attr('text-anchor','middle').attr('fill', k==='white_pct'?'#0a0d14':'#e8ecf3').attr('font-size',11).attr('font-weight',600)
+        .text(F(d[k],1)).attr('opacity',0).style('pointer-events','none').transition().delay(900).attr('opacity',1);
+      cum+=d[k];
+    });
+    svg.append('text').attr('x',x(d.tc_bucket)+x.bandwidth()/2).attr('y',H-M.b+22).attr('text-anchor','middle').attr('fill','#7d8597').attr('font-size',10).text(`n=${d.games.toLocaleString()}`);
+    // re-add tooltip on the column (passes through transparent click rect)
+    svg.append('rect').attr('x',x(d.tc_bucket)).attr('width',x.bandwidth())
+      .attr('y',M.t).attr('height',H-M.b-M.t).attr('fill','transparent').style('pointer-events','all')
+      .on('mousemove',(ev)=>showTip(`<b>${d.tc_bucket}</b><br>White ${F(d.white_pct)}% · Black ${F(d.black_pct)}% · Draw ${F(d.draw_pct)}%<br>${d.games.toLocaleString()} games · click to jump to A6`, ev.clientX, ev.clientY))
+      .on('mouseout',hideTip)
+      .on('click',()=>{
+        document.getElementById('b6').scrollIntoView({behavior:'smooth', block:'center'});
+        const cap = d.tc_bucket.charAt(0).toUpperCase()+d.tc_bucket.slice(1);
+        setTimeout(()=>highlightTugRow(cap), 700);
+      });
+  });
+}
+
+// Cross-chart link: highlight a row on the tug-of-war
+function highlightTugRow(label){
+  d3.select('#A6').selectAll('circle')
+    .transition().duration(300).attr('r',8);
+  d3.select('#A6').selectAll('circle').filter(function(){
+    return d3.select(this.parentNode).datum && false; // no-op selector; we'll use a different approach
+  });
+  // we don't bind data on circles directly; re-render with highlight instead
+  if(typeof window.__tugFilter === 'string') return;
+  const rows = document.querySelectorAll('#A6 text');
+  rows.forEach(t=>{
+    if(t.textContent === label){
+      const tx = t.getAttribute('x'), ty = t.getAttribute('y');
+      d3.select('#A6').append('rect')
+        .attr('x', 4).attr('y', +ty - 14)
+        .attr('width', 530).attr('height', 22)
+        .attr('fill','#5fb1ff').attr('opacity',0)
+        .attr('rx',4).attr('class','tug-flash')
+        .transition().duration(300).attr('opacity',0.18)
+        .transition().duration(900).attr('opacity',0)
+        .on('end', function(){ this.remove(); });
+    }
+  });
+}
+
+// ===== A4 treemap (interactive) =====
+function drawA4(data){
+  const W=540,H=360;
+  const svg=d3.select('#A4');
+  const root=d3.hierarchy({children:data}).sum(d=>d.games);
+  d3.treemap().size([W,H]).padding(2)(root);
+  const c=d3.scaleSequential([d3.min(data,d=>d.white_win_pct), d3.max(data,d=>d.white_win_pct)],
+    d3.interpolateRgb('#3a3a3a','#ffffff'));
+  const g=svg.selectAll('g').data(root.leaves()).join('g')
+    .attr('transform',d=>`translate(${d.x0},${d.y0})`)
+    .style('cursor','pointer')
+    .on('mousemove',(ev,d)=>showTip(`<b>${d.data.opening_family}</b><br>${F(d.data.white_win_pct,1)}% White wins · ${d.data.games.toLocaleString()} games`, ev.clientX, ev.clientY))
+    .on('mouseout',hideTip);
+  g.append('rect').attr('width',d=>d.x1-d.x0).attr('height',d=>d.y1-d.y0)
+    .attr('fill',d=>c(d.data.white_win_pct)).attr('rx',3)
+    .attr('opacity',0).transition().delay((d,i)=>i*30).duration(600).attr('opacity',1);
+  g.append('text').attr('x',6).attr('y',16)
+    .attr('fill','#0a0d14').attr('font-size',11).attr('font-weight',700)
+    .text(d=>{ const w=d.x1-d.x0; return w>110 ? d.data.opening_family : (w>60 ? d.data.opening_family.slice(0,12)+'…' : ''); });
+  g.append('text').attr('x',6).attr('y',32)
+    .attr('fill','#0a0d14').attr('font-size',12).attr('font-weight',800)
+    .text(d=>(d.x1-d.x0)>60 ? F(d.data.white_win_pct,1)+'%' : '');
+}
+
+// ===== A5 heatmap (interactive) =====
+function drawA5(data){
+  const W=540,H=320,M={t:20,r:20,b:50,l:160};
+  const svg=d3.select('#A5');
+  const families=Array.from(new Set(data.map(d=>d.opening_family)));
+  const bands=Array.from(new Set(data.map(d=>d.elo_band))).sort((a,b)=>a-b);
+  const x=d3.scaleBand().domain(bands).range([M.l,W-M.r]).padding(0.05);
+  const y=d3.scaleBand().domain(families).range([M.t,H-M.b]).padding(0.05);
+  const c=d3.scaleSequential([0, d3.max(data,d=>d.white_mate_pct)||1], d3.interpolateYlOrRd);
+  svg.selectAll('rect').data(data).join('rect')
+    .attr('x',d=>x(d.elo_band)).attr('y',d=>y(d.opening_family))
+    .attr('width',x.bandwidth()).attr('height',y.bandwidth())
+    .attr('fill',d=>c(d.white_mate_pct)).attr('opacity',0)
+    .style('cursor','pointer')
+    .on('mousemove',(ev,d)=>showTip(`<b>${d.opening_family} · Elo ${d.elo_band}</b><br>White mates ${F(d.white_mate_pct,1)}% · ${d.games.toLocaleString()} games`, ev.clientX, ev.clientY))
+    .on('mouseout',hideTip)
+    .transition().delay((d,i)=>i*15).duration(500).attr('opacity',1);
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).tickFormat(d=>'Elo '+d));
+  svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},0)`).call(d3.axisLeft(y).tickFormat(d=>d.length>18?d.slice(0,18)+'…':d));
+}
+
+// ===== A6 INNOVATIVE: Tug of War (custom + interactive filters) =====
+let A6_DATA = [];
+function drawA6(data){
+  A6_DATA = data;
+  renderA6('all');
+  document.querySelectorAll('#tug-filters .pill').forEach(p=>{
+    p.addEventListener('click',()=>{
+      document.querySelectorAll('#tug-filters .pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      renderA6(p.dataset.filter);
+    });
+  });
+}
+function renderA6(filter){
+  const TC = ['Bullet','Blitz','Rapid','Classical'];
+  const ELO = ['Elo 1000','Elo 1200','Elo 1400'];
+  const OPEN = ['Italian Game',"Bishop's Opening",'Ruy Lopez','Scandinavian','Philidor'];
+  let cuts = A6_DATA.filter(d=>{
+    if(filter==='tc') return TC.includes(d.label) || d.label==='Overall';
+    if(filter==='elo') return ELO.includes(d.label) || d.label==='Overall';
+    if(filter==='opening') return OPEN.includes(d.label) || d.label==='Overall';
+    return true;
+  });
+  const W=540,M={t:24,r:30,b:50,l:140};
+  const rowH=30;
+  const H = M.t + cuts.length*rowH + M.b;
+  const svg=d3.select('#A6');
+  svg.attr('viewBox',`0 0 ${W} ${H}`);
+  svg.selectAll('*').remove();
+  const xMax = d3.max(cuts,d=>Math.abs(d.edge))+2;
+  const x=d3.scaleLinear().domain([-xMax,xMax]).range([M.l,W-M.r]);
+  // axis
+  svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b+4})`)
+    .call(d3.axisBottom(x).ticks(7).tickFormat(d=>(d>0?'+':'')+d+'pp'));
+  // zero line (the rope)
+  svg.append('line').attr('x1',x(0)).attr('x2',x(0)).attr('y1',M.t-4).attr('y2',H-M.b+4)
+    .attr('stroke','#445166').attr('stroke-dasharray','2 3');
+  // labels left and right
+  svg.append('text').attr('x',M.l).attr('y',M.t-10).attr('text-anchor','start').attr('fill','#3b3f4c').attr('font-size',11).attr('font-weight',700).text('◀ BLACK PULLS');
+  svg.append('text').attr('x',W-M.r).attr('y',M.t-10).attr('text-anchor','end').attr('fill','#fff').attr('font-size',11).attr('font-weight',700).text('WHITE PULLS ▶');
+  // rows
+  cuts.forEach((d,i)=>{
+    const yy = M.t + i*rowH;
+    // row label
+    svg.append('text').attr('x',M.l-10).attr('y',yy+rowH/2+4).attr('text-anchor','end')
+      .attr('fill', d.label==='Overall' ? '#fff' : '#cbd1de').attr('font-size',12)
+      .attr('font-weight', d.label==='Overall' ? 700 : 400)
+      .text(d.label);
+    // rope
+    svg.append('line').attr('x1',M.l).attr('x2',W-M.r).attr('y1',yy+rowH/2).attr('y2',yy+rowH/2)
+      .attr('stroke','#1f242f').attr('stroke-width',6).attr('stroke-linecap','round');
+    // segment indicating direction & magnitude
+    const xMid = x(0); const xEnd = x(d.edge);
+    svg.append('line').attr('x1',xMid).attr('x2',xMid).attr('y1',yy+rowH/2).attr('y2',yy+rowH/2)
+      .attr('stroke', d.edge>=0?COL.white:COL.black).attr('stroke-width',6).attr('stroke-linecap','round')
+      .transition().duration(700).delay(i*40).attr('x2',xEnd);
+    // marker (the knot in the rope)
+    const knot = svg.append('circle').attr('cx',xMid).attr('cy',yy+rowH/2).attr('r',8)
+      .attr('fill', d.edge>=0?COL.white:COL.black).attr('stroke','#0a0d14').attr('stroke-width',1.5)
+      .style('cursor','pointer')
+      .on('mousemove',(ev)=>showTip(`<b>${d.label}</b><br>White edge: ${F(d.edge,2)}pp<br>${d.games.toLocaleString()} games`, ev.clientX, ev.clientY))
+      .on('mouseout',hideTip);
+    knot.transition().duration(700).delay(i*40).attr('cx',xEnd);
+    // edge label
+    svg.append('text').attr('x', xEnd).attr('y', yy+rowH/2-12).attr('text-anchor','middle')
+      .attr('fill','#fff').attr('font-size',10).attr('font-weight',700)
+      .text((d.edge>=0?'+':'')+F(d.edge,1)+'pp')
+      .attr('opacity',0).transition().delay(i*40+700).attr('opacity',1);
+  });
+}
+</script>
+</body>
+</html>

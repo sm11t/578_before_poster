@@ -1,0 +1,38 @@
+[
+  {
+    "opening_family": "Sicilian Defense",
+    "games": 151635,
+    "white_pct": 44.77726118640155,
+    "black_pct": 52.27816796913641
+  },
+  {
+    "opening_family": "French Defense",
+    "games": 114021,
+    "white_pct": 48.10429657694635,
+    "black_pct": 48.78136483630208
+  },
+  {
+    "opening_family": "Scandinavian Defense",
+    "games": 98715,
+    "white_pct": 51.53927974471965,
+    "black_pct": 45.14207567239021
+  },
+  {
+    "opening_family": "Caro-Kann Defense",
+    "games": 37954,
+    "white_pct": 46.9146861990831,
+    "black_pct": 50.06323444169257
+  },
+  {
+    "opening_family": "Modern Defense",
+    "games": 32505,
+    "white_pct": 47.66958929395478,
+    "black_pct": 49.46008306414398
+  },
+  {
+    "opening_family": "Pirc Defense",
+    "games": 24541,
+    "white_pct": 49.72495008353368,
+    "black_pct": 47.35748339513467
+  }
+]

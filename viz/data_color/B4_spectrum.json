@@ -1,0 +1,362 @@
+[
+  {
+    "opening_family": "Sicilian Defense",
+    "games": 151635,
+    "white_pct": 44.77726118640155,
+    "black_pct": 52.27816796913641
+  },
+  {
+    "opening_family": "King's Pawn Game",
+    "games": 139480,
+    "white_pct": 49.39346142816174,
+    "black_pct": 47.27989675939203
+  },
+  {
+    "opening_family": "Queen's Pawn Game",
+    "games": 130416,
+    "white_pct": 49.00702367807631,
+    "black_pct": 47.66516378358484
+  },
+  {
+    "opening_family": "French Defense",
+    "games": 114021,
+    "white_pct": 48.10429657694635,
+    "black_pct": 48.78136483630208
+  },
+  {
+    "opening_family": "Scandinavian Defense",
+    "games": 98715,
+    "white_pct": 51.53927974471965,
+    "black_pct": 45.14207567239021
+  },
+  {
+    "opening_family": "Philidor Defense",
+    "games": 81323,
+    "white_pct": 53.270292537166604,
+    "black_pct": 43.21655620181252
+  },
+  {
+    "opening_family": "Italian Game",
+    "games": 64419,
+    "white_pct": 54.08497492975675,
+    "black_pct": 42.98266039522501
+  },
+  {
+    "opening_family": "Van't Kruijs Opening",
+    "games": 53581,
+    "white_pct": 44.26382486329109,
+    "black_pct": 52.692185662828244
+  },
+  {
+    "opening_family": "Bishop's Opening",
+    "games": 46436,
+    "white_pct": 54.442673787578606,
+    "black_pct": 42.413213885778276
+  },
+  {
+    "opening_family": "Ruy Lopez",
+    "games": 45769,
+    "white_pct": 52.67102187069851,
+    "black_pct": 43.63433765212262
+  },
+  {
+    "opening_family": "English Opening",
+    "games": 44325,
+    "white_pct": 51.1697687535251,
+    "black_pct": 45.41680767061478
+  },
+  {
+    "opening_family": "Caro-Kann Defense",
+    "games": 37954,
+    "white_pct": 46.9146861990831,
+    "black_pct": 50.06323444169257
+  },
+  {
+    "opening_family": "Scotch Game",
+    "games": 33107,
+    "white_pct": 53.55664965113118,
+    "black_pct": 42.77947261908358
+  },
+  {
+    "opening_family": "Modern Defense",
+    "games": 32505,
+    "white_pct": 47.66958929395478,
+    "black_pct": 49.46008306414398
+  },
+  {
+    "opening_family": "Zukertort Opening",
+    "games": 30468,
+    "white_pct": 50.04266771694893,
+    "black_pct": 47.08546671918078
+  },
+  {
+    "opening_family": "Four Knights Game",
+    "games": 27906,
+    "white_pct": 49.32630975417473,
+    "black_pct": 46.9612269762775
+  },
+  {
+    "opening_family": "Horwitz Defense",
+    "games": 27723,
+    "white_pct": 51.625004508891536,
+    "black_pct": 45.337806153735166
+  },
+  {
+    "opening_family": "Queen's Gambit Accepted",
+    "games": 26022,
+    "white_pct": 60.01844593036661,
+    "black_pct": 36.73430174467758
+  },
+  {
+    "opening_family": "Hungarian Opening",
+    "games": 25044,
+    "white_pct": 48.72624181440664,
+    "black_pct": 48.04743651173934
+  },
+  {
+    "opening_family": "Nimzowitsch Defense",
+    "games": 24822,
+    "white_pct": 53.81919265167996,
+    "black_pct": 42.96591733139957
+  },
+  {
+    "opening_family": "Pirc Defense",
+    "games": 24541,
+    "white_pct": 49.72495008353368,
+    "black_pct": 47.35748339513467
+  },
+  {
+    "opening_family": "Russian Game",
+    "games": 24385,
+    "white_pct": 56.86692638917367,
+    "black_pct": 39.909780602829606
+  },
+  {
+    "opening_family": "Queen's Gambit Declined",
+    "games": 23582,
+    "white_pct": 55.6610974472055,
+    "black_pct": 41.23908065473666
+  },
+  {
+    "opening_family": "Center Game",
+    "games": 23467,
+    "white_pct": 45.74508884816977,
+    "black_pct": 51.16972770273149
+  },
+  {
+    "opening_family": "Owen Defense",
+    "games": 22006,
+    "white_pct": 50.28174134327002,
+    "black_pct": 46.691811324184314
+  },
+  {
+    "opening_family": "Queen's Gambit Refused",
+    "games": 21871,
+    "white_pct": 57.93059302272415,
+    "black_pct": 39.07914590096475
+  },
+  {
+    "opening_family": "Vienna Game",
+    "games": 20612,
+    "white_pct": 50.7859499320784,
+    "black_pct": 46.13332039588589
+  },
+  {
+    "opening_family": "Indian Game",
+    "games": 19632,
+    "white_pct": 45.07946210268948,
+    "black_pct": 51.808272208638954
+  },
+  {
+    "opening_family": "Nimzo-Larsen Attack",
+    "games": 18527,
+    "white_pct": 49.34420035623685,
+    "black_pct": 47.309332325794784
+  },
+  {
+    "opening_family": "Alekhine Defense",
+    "games": 17675,
+    "white_pct": 54.21782178217822,
+    "black_pct": 42.94200848656294
+  },
+  {
+    "opening_family": "King's Knight Opening",
+    "games": 16814,
+    "white_pct": 53.93719519448079,
+    "black_pct": 42.97609135244439
+  },
+  {
+    "opening_family": "Queen's Pawn",
+    "games": 15672,
+    "white_pct": 56.11919346605411,
+    "black_pct": 41.04134762633997
+  },
+  {
+    "opening_family": "Slav Defense",
+    "games": 14067,
+    "white_pct": 54.02715575460297,
+    "black_pct": 42.745432572687854
+  },
+  {
+    "opening_family": "Three Knights Opening",
+    "games": 12851,
+    "white_pct": 47.202552330557936,
+    "black_pct": 49.40471558633569
+  },
+  {
+    "opening_family": "Mieses Opening",
+    "games": 12371,
+    "white_pct": 44.53156575862905,
+    "black_pct": 52.67157060868159
+  },
+  {
+    "opening_family": "Bird Opening",
+    "games": 12144,
+    "white_pct": 49.63768115942029,
+    "black_pct": 47.73550724637681
+  },
+  {
+    "opening_family": "Rat Defense",
+    "games": 9429,
+    "white_pct": 53.696044119206704,
+    "black_pct": 43.41923851946124
+  },
+  {
+    "opening_family": "Petrov's Defense",
+    "games": 9190,
+    "white_pct": 51.969532100108815,
+    "black_pct": 44.78781284004353
+  },
+  {
+    "opening_family": "Polish Opening",
+    "games": 8632,
+    "white_pct": 52.803521779425395,
+    "black_pct": 44.335032437442074
+  },
+  {
+    "opening_family": "English Defense",
+    "games": 8571,
+    "white_pct": 51.569245128923114,
+    "black_pct": 45.478940613697354
+  },
+  {
+    "opening_family": "Van Geet Opening",
+    "games": 8103,
+    "white_pct": 42.502776749352094,
+    "black_pct": 54.46131062569419
+  },
+  {
+    "opening_family": "Elephant Gambit",
+    "games": 7325,
+    "white_pct": 57.1740614334471,
+    "black_pct": 39.80887372013652
+  },
+  {
+    "opening_family": "Robatsch (Modern) Defense",
+    "games": 6501,
+    "white_pct": 47.638824796185204,
+    "black_pct": 49.46931241347485
+  },
+  {
+    "opening_family": "Blackmar-Diemer Gambit",
+    "games": 6057,
+    "white_pct": 45.930328545484564,
+    "black_pct": 50.9162951956414
+  },
+  {
+    "opening_family": "Old Benoni Defense",
+    "games": 6037,
+    "white_pct": 43.680636077521946,
+    "black_pct": 53.735298989564356
+  },
+  {
+    "opening_family": "King's Indian Defense",
+    "games": 5960,
+    "white_pct": 49.02684563758389,
+    "black_pct": 47.61744966442953
+  },
+  {
+    "opening_family": "Ponziani Opening",
+    "games": 5927,
+    "white_pct": 49.16483887295428,
+    "black_pct": 47.59574827062595
+  },
+  {
+    "opening_family": "Saragossa Opening",
+    "games": 5875,
+    "white_pct": 42.757446808510636,
+    "black_pct": 54.263829787234044
+  },
+  {
+    "opening_family": "Englund Gambit Declined, Reversed French",
+    "games": 5610,
+    "white_pct": 45.27629233511586,
+    "black_pct": 51.69340463458111
+  },
+  {
+    "opening_family": "Englund Gambit",
+    "games": 5604,
+    "white_pct": 55.87080656673805,
+    "black_pct": 41.666666666666664
+  },
+  {
+    "opening_family": "King's Gambit",
+    "games": 5599,
+    "white_pct": 61.61814609751741,
+    "black_pct": 35.97070905518843
+  },
+  {
+    "opening_family": "Dutch Defense",
+    "games": 5564,
+    "white_pct": 51.41984184040259,
+    "black_pct": 45.704529115744066
+  },
+  {
+    "opening_family": "Nimzo-Indian Defense",
+    "games": 5420,
+    "white_pct": 53.413284132841326,
+    "black_pct": 43.542435424354245
+  },
+  {
+    "opening_family": "Reti Opening",
+    "games": 5372,
+    "white_pct": 47.87788533134773,
+    "black_pct": 49.36708860759494
+  },
+  {
+    "opening_family": "Grob Opening",
+    "games": 5330,
+    "white_pct": 43.09568480300187,
+    "black_pct": 54.01500938086304
+  },
+  {
+    "opening_family": "Semi-Slav Defense",
+    "games": 5049,
+    "white_pct": 54.16914240443652,
+    "black_pct": 42.87977817389582
+  },
+  {
+    "opening_family": "Benoni Defense",
+    "games": 5024,
+    "white_pct": 46.357484076433124,
+    "black_pct": 51.23407643312102
+  },
+  {
+    "opening_family": "Giuoco Piano",
+    "games": 4949,
+    "white_pct": 46.0295009092746,
+    "black_pct": 50.73752273186502
+  },
+  {
+    "opening_family": "Mikenas Defense",
+    "games": 4809,
+    "white_pct": 60.365980453316695,
+    "black_pct": 36.57725098773134
+  },
+  {
+    "opening_family": "St. George Defense",
+    "games": 4751,
+    "white_pct": 52.873079351715425,
+    "black_pct": 44.26436539675858
+  }
+]

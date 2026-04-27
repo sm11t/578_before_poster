@@ -1,0 +1,37 @@
+[
+  {
+    "factor": "Color (W vs B baseline)",
+    "lo": 46.487379563562946,
+    "hi": 50.36527423948501,
+    "spread": 3.8778946759220645,
+    "subgroups": 2
+  },
+  {
+    "factor": "Time control (4 buckets)",
+    "lo": 50.20167024882644,
+    "hi": 50.603883413241846,
+    "spread": 0.4022131644154072,
+    "subgroups": 4
+  },
+  {
+    "factor": "Elo band (3 bands)",
+    "lo": 49.532318023743855,
+    "hi": 50.40802993681596,
+    "spread": 0.8757119130721023,
+    "subgroups": 3
+  },
+  {
+    "factor": "Opening (top 60)",
+    "lo": 42.502776749352094,
+    "hi": 61.61814609751741,
+    "spread": 19.115369348165316,
+    "subgroups": 60
+  },
+  {
+    "factor": "Rating diff (7 buckets)",
+    "lo": 19.54879052301369,
+    "hi": 80.73750856255914,
+    "spread": 61.18871803954545,
+    "subgroups": 7
+  }
+]

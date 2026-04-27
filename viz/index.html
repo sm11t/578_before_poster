@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Color is Destiny — or is it? · CSE 578</title>
+<style>
+  :root{
+    --bg:#0a0d14; --panel:#10141d; --ink:#eef1f6; --mute:#7d8597;
+    --white:#f1f1f1; --black:#3b3f4c;
+    --aSide:#f1f1f1; --bSide:#5fb1ff;
+    --grid:#1d2230;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;}
+  .wrap{max-width:1100px;margin:0 auto;padding:64px 32px;}
+  .top{padding-top:60px;text-align:center;}
+  h1{font-size:56px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px;}
+  h1 em{font-style:normal;color:#ffffff;text-shadow:0 0 18px rgba(255,255,255,.25);}
+  h1 b{font-weight:800;color:var(--bSide);}
+  .sub{color:var(--mute);font-size:18px;margin:6px 0 0;}
+  .meta{margin-top:24px;color:var(--mute);font-size:13px;}
+  .meta b{color:var(--ink);font-weight:600;}
+  .topic{margin:48px auto 0;max-width:780px;text-align:left;
+         background:var(--panel);border:1px solid var(--grid);border-radius:14px;padding:24px 28px;}
+  .topic h2{margin:0 0 8px;font-size:18px;color:var(--ink);}
+  .topic p{margin:0 0 10px;color:#cbd1de;}
+  .topic strong{color:var(--ink);}
+
+  .stories{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px;}
+  .story{position:relative;display:block;text-decoration:none;color:var(--ink);
+         padding:36px 32px 30px;border-radius:18px;border:1px solid var(--grid);
+         min-height:280px;transition:transform .25s ease, box-shadow .25s ease;}
+  .story:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5);}
+  .story.A{background:linear-gradient(135deg,#1a1d24 0%,#0d0f14 100%);}
+  .story.A:hover{border-color:#888;}
+  .story.B{background:linear-gradient(135deg,#0c1f33 0%,#0a0d14 100%);}
+  .story.B:hover{border-color:var(--bSide);}
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;
+         font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px;}
+  .story.A .badge{background:#1f1f1f;color:#e0e0e0;}
+  .story.B .badge{background:#0e2640;color:var(--bSide);}
+  .story h3{font-size:30px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;}
+  .story.A h3{color:#fff;}
+  .story.B h3{color:var(--bSide);}
+  .story p{color:#cbd1de;font-size:14.5px;margin:0 0 12px;}
+  .killer{font-size:42px;font-weight:800;line-height:1;margin:14px 0 4px;}
+  .story.A .killer{color:#fff;}
+  .story.B .killer{color:var(--bSide);}
+  .killer-l{color:var(--mute);font-size:11px;text-transform:uppercase;letter-spacing:.08em;}
+  .arrow{position:absolute;right:24px;bottom:18px;font-size:22px;color:var(--mute);}
+
+  .team{margin-top:64px;padding:24px 28px;background:var(--panel);
+        border:1px solid var(--grid);border-radius:14px;}
+  .team h2{margin:0 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute);}
+  .team-list{display:flex;flex-wrap:wrap;gap:10px;}
+  .member{padding:6px 14px;background:#0d121a;border:1px solid var(--grid);border-radius:999px;font-size:13px;}
+  footer{margin:48px 0 24px;text-align:center;color:var(--mute);font-size:12px;}
+  footer code{background:#1a1f2a;padding:2px 6px;border-radius:4px;color:var(--ink);}
+
+  @media (max-width:760px){
+    .stories{grid-template-columns:1fr;}
+    h1{font-size:38px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1><em>Color</em> is <b>Destiny</b>.</h1>
+    <p class="sub">Or is it just noise?</p>
+    <div class="meta"><b>CSE 578</b> · Data Visualization Project · 1.8 million Lichess games</div>
+  </div>
+
+  <div class="topic">
+    <h2>The Question</h2>
+    <p>For 400 years, chess writers have argued that <strong>White's first move</strong> is a real advantage. Black has spent the same 400 years trying to disprove it. We tested both sides on <strong>1,797,006 club-level games</strong> from Lichess (Elo 1000–1599).</p>
+    <p>We came back with two contradictory answers — both supported by the same data, both featuring six visualizations, both linking to the same numbers. <strong>Click each side and judge for yourself.</strong></p>
+  </div>
+
+  <div class="stories">
+    <a class="story A" href="side_a.html">
+      <span class="badge">Side A</span>
+      <h3>Color is Destiny</h3>
+      <p>White wins more. Always. Across every Elo band, every time control, and the strongest opening families. The first-move advantage is real, persistent, and visible at every level.</p>
+      <div class="killer">+3.9 pp</div>
+      <div class="killer-l">White's edge across 1.8M games</div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="story B" href="side_b.html">
+      <span class="badge">Side B</span>
+      <h3>Color is Irrelevant</h3>
+      <p>Color barely moves the needle. The most-played opening in chess (the Sicilian) is one Black wins more often. Opening choice swings outcomes <strong>5×</strong> harder than color does. Rating difference swings them <strong>16×</strong> harder.</p>
+      <div class="killer">+61.2 pp</div>
+      <div class="killer-l">Spread from rating-diff alone</div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="team">
+    <h2>Team</h2>
+    <div class="team-list">
+      <span class="member">Mathew Abraham Palliambil</span>
+      <span class="member">Basil Shibu Thomas</span>
+      <span class="member">Asmit Datta</span>
+      <span class="member">Chandana Priya Srinivasa</span>
+      <span class="member">Kruthika Kadurhalli Raghu</span>
+      <span class="member">Parth Jain</span>
+    </div>
+  </div>
+
+  <footer>
+    Source: <code>chess_games.csv</code> · 1.8M Lichess games (Jun 2016, Elo 1000–1599) ·
+    Pre-aggregated with <code>preprocess_color.py</code> (DuckDB) · Charts in D3 v7.
+  </footer>
+</div>
+</body>
+</html>

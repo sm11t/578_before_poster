@@ -1,0 +1,34 @@
+# --- raw datasets (download via Kaggle links in README) ---
+data1/
+data2/
+data2.zip
+*.csv
+*.pgn
+
+# --- python ---
+viz/.venv/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.python-version
+
+# --- node (in case react/scrollama gets added later) ---
+node_modules/
+package-lock.json
+.npm/
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+
+# --- logs / temp ---
+*.log
+.cache/
+tmp/

@@ -1,0 +1,9 @@
+{
+  "total_games": 1797006,
+  "white_pct": 50.37,
+  "draw_pct": 3.15,
+  "black_pct": 46.49,
+  "white_edge": 3.88,
+  "elo_min": 1000,
+  "elo_max": 1599
+}

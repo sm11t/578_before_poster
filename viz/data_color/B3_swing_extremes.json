@@ -1,0 +1,72 @@
+[
+  {
+    "opening_family": "Amar Opening",
+    "games": 613,
+    "white_pct": 25.938009787928223,
+    "black_pct": 70.1468189233279,
+    "edge": -44.208809135399676
+  },
+  {
+    "opening_family": "Ware Opening",
+    "games": 1894,
+    "white_pct": 32.206969376979934,
+    "black_pct": 63.463569165786694,
+    "edge": -31.25659978880676
+  },
+  {
+    "opening_family": "Paleface Attack",
+    "games": 798,
+    "white_pct": 33.20802005012531,
+    "black_pct": 63.659147869674186,
+    "edge": -30.451127819548873
+  },
+  {
+    "opening_family": "Kadas Opening",
+    "games": 2736,
+    "white_pct": 35.08771929824562,
+    "black_pct": 60.8187134502924,
+    "edge": -25.730994152046783
+  },
+  {
+    "opening_family": "Gedult's Opening",
+    "games": 1632,
+    "white_pct": 38.11274509803921,
+    "black_pct": 59.19117647058823,
+    "edge": -21.07843137254902
+  },
+  {
+    "opening_family": "King's Pawn",
+    "games": 3655,
+    "white_pct": 89.3296853625171,
+    "black_pct": 9.822161422708618,
+    "edge": 79.50752393980848
+  },
+  {
+    "opening_family": "Ware Defense",
+    "games": 1777,
+    "white_pct": 67.24817107484525,
+    "black_pct": 29.60045019696117,
+    "edge": 37.647720877884076
+  },
+  {
+    "opening_family": "Barnes Defense",
+    "games": 1367,
+    "white_pct": 66.13021214337967,
+    "black_pct": 30.724213606437456,
+    "edge": 35.40599853694221
+  },
+  {
+    "opening_family": "Mexican Defense",
+    "games": 632,
+    "white_pct": 65.34810126582279,
+    "black_pct": 31.962025316455698,
+    "edge": 33.3860759493671
+  },
+  {
+    "opening_family": "Goldsmith Defense",
+    "games": 1575,
+    "white_pct": 64.25396825396825,
+    "black_pct": 32.317460317460316,
+    "edge": 31.936507936507937
+  }
+]

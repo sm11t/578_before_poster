@@ -1,0 +1,182 @@
+[
+  {
+    "opening_family": "Bishop's Opening",
+    "elo_band": 1000,
+    "games": 1790,
+    "white_mate_pct": 27.76536312849162
+  },
+  {
+    "opening_family": "Bishop's Opening",
+    "elo_band": 1200,
+    "games": 11832,
+    "white_mate_pct": 25.13522650439486
+  },
+  {
+    "opening_family": "Bishop's Opening",
+    "elo_band": 1400,
+    "games": 32814,
+    "white_mate_pct": 22.069848235509234
+  },
+  {
+    "opening_family": "French Defense",
+    "elo_band": 1000,
+    "games": 3797,
+    "white_mate_pct": 19.146694759020278
+  },
+  {
+    "opening_family": "French Defense",
+    "elo_band": 1200,
+    "games": 24846,
+    "white_mate_pct": 20.127988408596956
+  },
+  {
+    "opening_family": "French Defense",
+    "elo_band": 1400,
+    "games": 85378,
+    "white_mate_pct": 18.22834922345335
+  },
+  {
+    "opening_family": "Italian Game",
+    "elo_band": 1000,
+    "games": 1545,
+    "white_mate_pct": 21.87702265372168
+  },
+  {
+    "opening_family": "Italian Game",
+    "elo_band": 1200,
+    "games": 14437,
+    "white_mate_pct": 21.472605111865345
+  },
+  {
+    "opening_family": "Italian Game",
+    "elo_band": 1400,
+    "games": 48437,
+    "white_mate_pct": 20.76098850052646
+  },
+  {
+    "opening_family": "King's Pawn Game",
+    "elo_band": 1000,
+    "games": 10045,
+    "white_mate_pct": 21.14484818317571
+  },
+  {
+    "opening_family": "King's Pawn Game",
+    "elo_band": 1200,
+    "games": 47310,
+    "white_mate_pct": 20.917353625026422
+  },
+  {
+    "opening_family": "King's Pawn Game",
+    "elo_band": 1400,
+    "games": 82125,
+    "white_mate_pct": 19.729680365296804
+  },
+  {
+    "opening_family": "Philidor Defense",
+    "elo_band": 1000,
+    "games": 2755,
+    "white_mate_pct": 22.79491833030853
+  },
+  {
+    "opening_family": "Philidor Defense",
+    "elo_band": 1200,
+    "games": 20008,
+    "white_mate_pct": 23.44562175129948
+  },
+  {
+    "opening_family": "Philidor Defense",
+    "elo_band": 1400,
+    "games": 58560,
+    "white_mate_pct": 21.63080601092896
+  },
+  {
+    "opening_family": "Queen's Pawn Game",
+    "elo_band": 1000,
+    "games": 5398,
+    "white_mate_pct": 17.210077806595034
+  },
+  {
+    "opening_family": "Queen's Pawn Game",
+    "elo_band": 1200,
+    "games": 32834,
+    "white_mate_pct": 18.133641956508498
+  },
+  {
+    "opening_family": "Queen's Pawn Game",
+    "elo_band": 1400,
+    "games": 92184,
+    "white_mate_pct": 17.05502039399462
+  },
+  {
+    "opening_family": "Ruy Lopez",
+    "elo_band": 1000,
+    "games": 973,
+    "white_mate_pct": 19.013360739979444
+  },
+  {
+    "opening_family": "Ruy Lopez",
+    "elo_band": 1200,
+    "games": 10171,
+    "white_mate_pct": 19.083669255727067
+  },
+  {
+    "opening_family": "Ruy Lopez",
+    "elo_band": 1400,
+    "games": 34625,
+    "white_mate_pct": 18.417328519855594
+  },
+  {
+    "opening_family": "Scandinavian Defense",
+    "elo_band": 1000,
+    "games": 3779,
+    "white_mate_pct": 19.899444297433185
+  },
+  {
+    "opening_family": "Scandinavian Defense",
+    "elo_band": 1200,
+    "games": 25685,
+    "white_mate_pct": 20.54895853611057
+  },
+  {
+    "opening_family": "Scandinavian Defense",
+    "elo_band": 1400,
+    "games": 69251,
+    "white_mate_pct": 19.67047407257657
+  },
+  {
+    "opening_family": "Sicilian Defense",
+    "elo_band": 1000,
+    "games": 2850,
+    "white_mate_pct": 16.70175438596491
+  },
+  {
+    "opening_family": "Sicilian Defense",
+    "elo_band": 1200,
+    "games": 29437,
+    "white_mate_pct": 14.906410299962632
+  },
+  {
+    "opening_family": "Sicilian Defense",
+    "elo_band": 1400,
+    "games": 119348,
+    "white_mate_pct": 13.983476891108355
+  },
+  {
+    "opening_family": "Van't Kruijs Opening",
+    "elo_band": 1000,
+    "games": 3007,
+    "white_mate_pct": 18.45693382108414
+  },
+  {
+    "opening_family": "Van't Kruijs Opening",
+    "elo_band": 1200,
+    "games": 14093,
+    "white_mate_pct": 16.149861633435037
+  },
+  {
+    "opening_family": "Van't Kruijs Opening",
+    "elo_band": 1400,
+    "games": 36481,
+    "white_mate_pct": 14.160796030810559
+  }
+]

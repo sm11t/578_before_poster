@@ -1,0 +1,30 @@
+[
+  {
+    "tc_bucket": "bullet",
+    "games": 426738,
+    "white_pct": 50.603883413241846,
+    "black_pct": 47.240930032010276,
+    "draw_pct": 2.155186554747878
+  },
+  {
+    "tc_bucket": "blitz",
+    "games": 935190,
+    "white_pct": 50.20167024882644,
+    "black_pct": 46.445748992183404,
+    "draw_pct": 3.3525807589901517
+  },
+  {
+    "tc_bucket": "rapid",
+    "games": 391745,
+    "white_pct": 50.575501920892414,
+    "black_pct": 45.853807961811896,
+    "draw_pct": 3.57069011729569
+  },
+  {
+    "tc_bucket": "classical",
+    "games": 31584,
+    "white_pct": 50.21529888551165,
+    "black_pct": 45.79850557244174,
+    "draw_pct": 3.9861955420466058
+  }
+]
