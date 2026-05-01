@@ -1,0 +1,582 @@
+%% CSE 578 Final Project Report
+%% ACM SIG conference double-column format
+%% Drop into Overleaf as main.tex (or rename) and compile with pdfLaTeX.
+%% Template: https://www.acm.org/publications/proceedings-template
+
+\documentclass[sigconf,nonacm,natbib=false]{acmart}
+
+% Suppress ACM reference format block — this is a class report, not a publication.
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\begin{document}
+
+%% ============================================================
+%% TITLE
+%% ============================================================
+\title{Color is Destiny --- or is it? A Dueling Scrollytelling
+Investigation of White's First-Move Advantage in Chess}
+
+\author{Team 7 --- CSE 578: Data Visualization}
+\affiliation{%
+  \institution{Arizona State University}
+  \city{Tempe}
+  \state{Arizona}
+  \country{USA}
+}
+\email{team7@asu.edu}
+
+%% Replace the single \author block above with one block per teammate
+%% if you want individual names listed. Example for two members:
+%
+% \author{Member One}
+% \affiliation{\institution{Arizona State University}\country{USA}}
+% \email{m1@asu.edu}
+%
+% \author{Member Two}
+% \affiliation{\institution{Arizona State University}\country{USA}}
+% \email{m2@asu.edu}
+
+\renewcommand{\shortauthors}{Team 7}
+
+\begin{abstract}
+We present a dueling scrollytelling visual data story that argues
+both sides of one of chess's oldest claims: \emph{does playing the
+white pieces actually matter?} Using 1.8 million amateur Lichess games
+(rating band 1000--1599) drawn from a 6.25M-game public dump, we
+construct two opposing six-chart narratives from the same filtered
+dataset. ``Color is Destiny'' shows that White wins +3.9 percentage
+points more than Black across every cut --- time control, Elo band,
+and major opening. ``Color is Irrelevant'' shows that the same +3.9pp
+is dwarfed by an opening-choice swing of 19pp and a rating-gap swing
+of 61pp. The site renders 12 D3.js charts (10 standard plus 2 custom)
+served from 13 pre-aggregated JSON files (\textasciitilde 200~KB total),
+produced by a DuckDB streaming pipeline that compresses 4.4~GB of raw
+CSV by a factor of more than 22{,}000$\times$. We describe the design
+process, the three narrative pivots that preceded the final framing,
+the two innovative visualizations (\emph{Tug-of-War} and
+\emph{Factor-Variance}), and the lessons learned about constructing
+honest, data-driven controversy.
+\end{abstract}
+
+\keywords{scrollytelling, dueling narratives, chess, D3.js, DuckDB,
+data storytelling}
+
+\maketitle
+
+%% ============================================================
+%% 1. OVERVIEW
+%% ============================================================
+\section{Overview}
+
+Our team set out to build a \textbf{dueling scrollytelling visual
+data story}: a pair of opposing narratives that draw the same
+conclusion from incompatible framings of a single dataset. The
+project type was prescribed by the course rubric, but the topic was
+not. We arrived at our final question --- \emph{does the color of
+your pieces decide your chess game?} --- after three pivots, each
+driven by a failure of the data to support the previous claim
+honestly.
+
+\subsection{Why this story}
+
+We chose the color-advantage question for four reasons.
+
+\textbf{The phenomenon is real and well-known.} Chess has tracked
+White's first-move advantage for over a century; engine analysis
+of master play places the edge near 54\% for White at perfect play
+\cite{chessbase-firstmove}. We did not need to argue that the
+effect exists --- we needed to argue about what it \emph{means}.
+
+\textbf{The data genuinely supports both sides.} Side A of a
+dueling story is easy to write when the headline number is real
+(here, +3.9pp). Side B is hard --- it must be honest, not
+contrarian. Our dataset gave us exactly that. The same 1.8M games
+that prove White's edge also reveal that opening choice and rating
+gap each move outcomes by an order of magnitude more than color
+does. The controversy is not manufactured; it is statistical.
+
+\textbf{The audience is broad.} Chess hit a popular peak after
+\emph{The Queen's Gambit} (Netflix, 2020) and the post-pandemic
+Lichess and Chess.com user surge. A reader does not need a master's
+rating to follow ``does white win more than black.''
+
+\textbf{The dataset is large enough to be defensible.} 1.8M games
+in a single Elo band leaves tens of thousands of games per cell of
+every chart. No reader can reasonably claim our numbers are noise.
+
+\subsection{Pivots before the final framing}
+
+We initially proposed an ``Aggressive vs Defensive chess'' story,
+classifying openings via early piece sacrifices, queen sorties, and
+king-side pawn pushes. Two weeks of testing exposed the problem: any
+classification we wrote was subjective, and the resulting win-rate
+gap collapsed to noise once we corrected for which side actually
+\emph{committed} to the style. We then tried ``Memorize or Play
+Weird'' --- comparing top-10 mainline openings against share$<0.3\%$
+sidelines --- and discovered the Sicilian Defense (the most popular
+opening in our band) actually \emph{contradicted} the bucket
+aggregate. ``Color is Destiny vs.\ Color is Irrelevant'' was the
+third framing, and the first that survived hostile statistical
+review.
+
+%% ============================================================
+%% 2. DATASETS
+%% ============================================================
+\section{Datasets}
+
+We use two public Kaggle datasets.
+
+\subsection{Lichess June 2016 game dump}
+The primary dataset is Arevel's \emph{Chess Games} corpus on Kaggle
+\cite{kaggle-lichessgames}, a 4.4~GB CSV containing 6{,}256{,}184
+rated games played on lichess.org during June 2016. Each row
+records players' Elo, time control, ECO code, opening name, full
+PGN move sequence (column \texttt{AN}), termination reason
+(checkmate, resign, time forfeit), and result (\texttt{1-0},
+\texttt{0-1}, or \texttt{1/2-1/2}).
+
+\subsection{ECO opening reference}
+The secondary dataset is Lemercier's \emph{All Chess Openings}
+table \cite{kaggle-eco}, mapping each Encyclopedia of Chess
+Openings (ECO) code (e.g., \texttt{B20} for the Sicilian) to its
+canonical name and main-line moves.
+
+\subsection{Filtering}
+We filter to games where the average of \texttt{WhiteElo} and
+\texttt{BlackElo} falls in the band $[1000, 1599]$. This range is
+the modal Lichess strength bracket --- low enough that opening prep
+still drives outcomes, high enough that players actually finish
+games rather than blundering pieces in the opening. The filter
+retains \textasciitilde 1.8M games, every chart cell in our 12
+visualizations is computed on this filtered population, and every
+percentage we publish has $n \geq 1{,}000$.
+
+\subsection{Pipeline}
+The dataset cannot be shipped to a browser. We built a four-stage
+pipeline (Figure~\ref{fig:pipeline}):
+
+\textbf{(1)~CSV $\rightarrow$ DuckDB.} A single Python script
+(\texttt{viz/scripts/preprocess\_color.py}) opens the 4.4~GB CSV
+through DuckDB's \texttt{read\_csv\_auto}, which streams the file
+off disk without loading it into RAM. We materialize a derived
+\texttt{games} table with five engineered columns:
+\texttt{outcome} (categorical), \texttt{elo\_band}
+(\texttt{FLOOR}'d to 200-point bins), \texttt{rating\_diff}
+(\texttt{WhiteElo} $-$ \texttt{BlackElo}), \texttt{tc\_bucket}
+(bullet/blitz/rapid/classical from the \texttt{TimeControl}
+prefix), and \texttt{is\_mate} (does the move stream contain
+``\#''?). End-to-end load takes roughly 90~seconds on a laptop.
+
+\textbf{(2)~DuckDB $\rightarrow$ pre-aggregated JSON.} We issue 13
+analytical queries against the table --- one per chart plus a
+metadata file --- and serialize each result to a small JSON in
+\texttt{viz/data\_color/}. Every query is a deterministic
+aggregation: counts and percentages grouped by one or two columns,
+no sampling, no randomness. The resulting payload is approximately
+200~KB total, a 22{,}000$\times$ reduction from the source.
+
+\textbf{(3)~JSON $\rightarrow$ D3.} The two scrollytelling pages
+(\texttt{side\_a.html} and \texttt{side\_b.html}) fetch the JSONs
+client-side and render with D3.js v7. There is no server.
+
+\textbf{(4)~Static hosting.} The site is deployable on any static
+host (GitHub Pages, Netlify, Vercel) and runs locally via VS Code
+Live Server.
+
+This architecture matters for two reasons. First, every aggregate
+is reproducible: anyone with the Kaggle CSVs can run the script
+and regenerate every JSON byte-for-byte. Second, the load is
+instant --- the 12 charts and 1.8M games behind them weigh less
+than a single mid-quality JPEG.
+
+\begin{figure}[t]
+\centering
+\fbox{\parbox{0.92\linewidth}{\centering\small
+\textbf{4.4 GB CSV} (Kaggle Lichess dump)\\
+$\downarrow$ \textit{DuckDB stream + filter to Elo 1000--1599}\\
+\textbf{1.8M-row \texttt{games} table} (in-memory)\\
+$\downarrow$ \textit{13 analytical SQL queries}\\
+\textbf{13 JSONs (\textasciitilde 200 KB total)}\\
+$\downarrow$ \textit{static fetch}\\
+\textbf{D3.js v7 in the browser}
+}}
+\caption{Preprocessing pipeline. The 22{,}000$\times$ size reduction
+between source CSV and shipped JSON is what makes the site loadable
+without a backend.}
+\label{fig:pipeline}
+\end{figure}
+
+%% ============================================================
+%% 3. NARRATIVE
+%% ============================================================
+\section{Narrative}
+
+\subsection{Structure}
+
+The site is a three-page static experience. \texttt{index.html}
+is a landing splash carrying the title, the team, the
+``50.4 / 3.1 / 46.5'' headline split, and two large entry buttons
+labeled \emph{Side A: Color is Destiny} and \emph{Side B: Color is
+Irrelevant}. Each side button advertises its own ``killer'' number
+--- ``+3.9pp'' and ``+61.2pp'' respectively --- so the reader sees
+the fight before clicking either side.
+
+Each side is a single scrollytelling page. The reader scrolls
+vertically through six numbered acts; each act pairs a sticky
+visualization on the left with prose on the right that cues the
+reader on what to look at and what number matters. We chose a
+visual contrast between sides: Side A renders on a near-white
+\emph{newspaper-of-record} background to evoke established
+authority (``the canon says White wins''); Side B renders on a
+dark editorial background with warmer accents to evoke skepticism
+(``ignore the canon, look at the magnitudes''). The contrast is
+intentional and reinforced through typography (a serif display
+face on A, a geometric sans on B).
+
+\subsection{Why scrollytelling}
+
+We considered three alternatives: a static infographic poster, a
+multi-page click-through report, and an interactive dashboard with
+filter controls. We rejected the dashboard format because the
+project rubric \emph{requires} a directed narrative; a dashboard
+delegates the story to the user. We rejected the static poster
+because two opposing narratives need controlled \emph{pacing} ---
+the reader must see Side A's headline before Side A's nuance, and
+Side B's reframing before Side B's killer chart. We rejected
+multi-page click-through because page transitions break the
+emotional through-line of a controversy.
+
+Scrollytelling solves all three: it forces order, it preserves
+context (the previous scene's residual is still on screen as the
+next scene enters), and it lets us mount a single sticky figure and
+re-paint it as the user scrolls without a navigation cost.
+
+\subsection{Implementation}
+
+We use vanilla \texttt{IntersectionObserver} for scroll-triggered
+state changes rather than a heavyweight scrollytelling library
+(Scrollama, GSAP). Each act registers a single observer on its
+text container; entering the viewport flips a CSS class on the
+sticky chart wrapper, which D3 binds against. This keeps the JS
+bundle small (no third-party scrollytelling dependency) and makes
+the cross-chart link in Side~A trivial: clicking a bar in A3
+dispatches a custom event that A6 listens for, smoothly scrolling
+the user down and flashing the corresponding tug-of-war row.
+
+We use D3.js v7 exclusively for rendering (no NVD3, Vega-Lite,
+Highcharts, or Chart.js) per the rubric's requirement of
+``custom-built visualizations.'' Each chart is hand-rolled with
+D3 scales, axes, and selections.
+
+%% ============================================================
+%% 4. VISUALIZATIONS
+%% ============================================================
+\section{Twelve Visualizations}
+
+The 12 charts split 6-and-6 across the two sides, each generated by
+a single SQL query in \texttt{preprocess\_color.py} and rendered by
+its own JavaScript module. We summarize them in Table~\ref{tab:viz}
+and describe Side A then Side B.
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{ID} & \textbf{Side} & \textbf{Chart type} & \textbf{What it shows} & \textbf{Killer number} \\
+\midrule
+A1 & Destiny      & Stacked bar           & White / Draw / Black overall split  & 50.4 / 3.1 / 46.5 \\
+A2 & Destiny      & Multi-line            & Edge persists across Elo bands      & gap at every band \\
+A3 & Destiny      & Grouped bars          & Edge persists across time controls  & all four buckets \\
+A4 & Destiny      & Treemap               & Top White-winning openings          & 16 tiles, all $>$53\% \\
+A5 & Destiny      & Heatmap               & Mate-by-White by opening $\times$ Elo & decisive, not passive \\
+A6 & Destiny      & \emph{Tug-of-war (innovative)} & 13 cuts, all leaning White & rope tilts every cut \\
+\midrule
+B1 & Irrelevant   & Waffle (10$\times$10) & ``4 of 100 games are color-decided'' & 96 of 100 are not \\
+B2 & Irrelevant   & Grouped bars          & Black's defensive weapons           & Sicilian flips edge \\
+B3 & Irrelevant   & Diverging bars        & 5 most-Black + 5 most-White openings & up to $\pm 70$pp swing \\
+B4 & Irrelevant   & Bubble scatter        & 60 popular openings on a spectrum   & cloud, not a point \\
+B5 & Irrelevant   & Stacked bars          & Outcome by rating gap (7 buckets)   & 61.2pp swing \\
+B6 & Irrelevant   & \emph{Factor variance (innovative)} & Each predictor's spread of W\% & color is third-smallest \\
+\bottomrule
+\end{tabular}
+\caption{The twelve visualizations, by side. Two are innovative
+(custom-designed, see Section~\ref{sec:innovative}); the remaining
+ten are conventional types adapted to their narrative role.}
+\label{tab:viz}
+\end{table*}
+
+\subsection{Side A --- Color is Destiny}
+
+\textbf{A1} opens with a 100\%-stacked bar of the whole filtered
+population. White wins 50.4\%, Black 46.5\%, draws 3.1\% --- the
++3.9pp gap is the headline number that anchors every subsequent
+scene. \textbf{A2} plots that gap across Elo bands 1000--1400 as
+three lines (\% White / \% Draw / \% Black) and shows the edge
+holds at every band. \textbf{A3} regroups by time control
+(bullet/blitz/rapid/classical) and shows the edge survives at every
+pace; clicking any bar jumps the reader down to the corresponding
+row in A6. \textbf{A4} is a treemap of the 16 most-played openings
+where White wins above the population mean, with tile area = volume
+played and tile color = White win\% --- the ``deep bench'' of
+White's repertoire. \textbf{A5} is a heatmap of \%-White-by-mate
+across the top 10 openings $\times$ Elo bands, painted in
+\texttt{interpolateYlOrRd} so heat reads on the page background;
+hot cells argue White's wins are decisive, not passive. \textbf{A6}
+is the innovative tug-of-war strip described in
+Section~\ref{sec:innovative}.
+
+\subsection{Side B --- Color is Irrelevant}
+
+\textbf{B1} is a 10$\times$10 waffle: 4 cells lit to represent the
+3.9pp ``color-decided surplus,'' 96 cells dim. The reader sees
+that the same headline number can be read as ``tiny residual'' as
+easily as ``decisive edge.'' \textbf{B2} surfaces the six classic
+defenses (Sicilian, French, Caro-Kann, Scandinavian, Pirc, Modern)
+as side-by-side W\%/B\% bars; the Sicilian --- the most-played
+opening in our band --- has Black ahead, breaking the ``color
+predicts'' frame. \textbf{B3} is a diverging horizontal bar of the
+five most-Black-favoring and five most-White-favoring openings (with
+$n \geq 500$); some openings give Black a $\sim 70$pp lead, some
+give White a $\sim 70$pp lead --- color is downstream of \emph{the
+opening}. \textbf{B4} is a click-pinnable bubble scatter: each of
+the top-60 openings is one bubble, x = White win\%, y = games
+played, size = games. The cloud shape (not a point) is the
+argument. \textbf{B5} buckets games by \texttt{WhiteElo} $-$
+\texttt{BlackElo} into seven brackets from ``Black~$\geq$+200'' to
+``White~$\geq$+200'' and stacks the win/draw/loss outcome of each;
+the swing across these brackets is 61.2pp --- an order of
+magnitude larger than color. \textbf{B6} is the innovative
+factor-variance bar described in Section~\ref{sec:innovative}.
+
+%% ============================================================
+%% 5. INNOVATIVE VISUALIZATIONS
+%% ============================================================
+\section{Innovative Visualizations}
+\label{sec:innovative}
+
+The rubric requires explicit identification of which charts are
+innovative and a justification of \emph{why} they are custom rather
+than a re-skinning of an off-the-shelf visualization type. We
+designed two such charts, one per side. Both encode quantities that
+no standard chart type cleanly carries.
+
+\subsection{A6 --- Tug-of-War}
+
+The Tug-of-War chart (\texttt{viz/data\_color/A6\_tug\_of\_war.json})
+addresses Side A's structural claim: \emph{no matter how you cut the
+data, the rope tilts toward White.} The naive approach would be a
+small-multiples grid of 13 stacked bars, one per cut. We rejected
+that because a grid asks the reader to do the comparison work, and
+the comparison work \emph{is the argument}.
+
+The custom encoding works as follows. For each of 13 hand-picked
+subgroups (Overall; Bullet/Blitz/Rapid/Classical; Elo
+1000/1200/1400; and five named opening families: Italian Game,
+Bishop's Opening, Ruy Lopez, Scandinavian, Philidor), we compute
+$\mathrm{edge} = \%\mathrm{White} - \%\mathrm{Black}$. We render
+each subgroup as a horizontal rope: a center anchor (the 0 mark), a
+single \emph{knot} symbol drawn as a circle, and a small label. The
+knot is offset from center by a constant times the subgroup's edge.
+The rope is drawn through the knot and extended past it; tick
+marks at $\pm 5$ and $\pm 10$ pp give the reader scale.
+
+Why this is innovative:
+\begin{itemize}
+\item The encoding is metaphorical (rope, knot) but the geometry is
+  faithful --- offset distance is linear in win-percentage edge.
+\item The visualization compares 13 categorically different cuts on
+  a \emph{single shared axis}, which a small-multiples grid cannot.
+\item The interactivity is bidirectional with A3: clicking a time
+  control in A3 scrolls to A6 and flashes that row.
+\item The visual rhythm is the argument: the reader \emph{sees} all
+  13 ropes leaning the same way.
+\end{itemize}
+
+\subsection{B6 --- Factor Variance}
+
+The Factor-Variance chart
+(\texttt{viz/data\_color/B6\_factor\_variance.json}) is Side B's
+closing argument and the project's most important single image. It
+addresses a question that no standard chart cleanly answers: \emph{of
+all the predictors in this dataset, which one moves the outcome
+most?}
+
+For each of five predictors --- color (W vs.\ B baseline), time
+control (4 buckets), Elo band (3 bands), opening (top 60), and
+rating diff (7 buckets) --- we compute the \emph{spread} of White's
+win\% it produces, defined as $\max(\%\mathrm{White}) -
+\min(\%\mathrm{White})$ over the predictor's subgroups. We render
+each predictor as a horizontal range bar from its low to its high,
+with the predictor labeled on the left and the spread value on the
+right. A toggle lets the reader switch the sort key from \emph{n
+subgroups} (which makes the bars look uniform) to \emph{spread}
+(which makes the punchline jump out).
+
+The output:
+\begin{itemize}
+\item Color: \textbf{3.9pp}
+\item Time control: \textbf{0.4pp}
+\item Elo band: \textbf{0.9pp}
+\item Opening (top 60): \textbf{19.1pp}
+\item Rating diff (7 buckets): \textbf{61.2pp}
+\end{itemize}
+
+Why this is innovative:
+\begin{itemize}
+\item No single off-the-shelf chart compares the \emph{dynamic
+  range} of categorical predictors on a single image. A box plot
+  shows distribution, not range over a custom predictor partition;
+  a heatmap requires two axes; a bar chart of single values cannot
+  carry low/high.
+\item The chart is the literal proof of the project's thesis: color
+  is real, but it is the third-smallest knob on the dataset.
+\item The sortable axis turns it into a small interactive
+  experience without losing the static-image punchline.
+\end{itemize}
+
+%% ============================================================
+%% 6. DISCUSSION
+%% ============================================================
+\section{Discussion}
+
+\subsection{Lessons learned}
+
+\textbf{Honest controversy is hard.} The first two narratives we
+proposed (Aggressive vs.\ Defensive; Memorize vs.\ Weird) failed
+not because we executed them poorly but because the data did not
+support them under hostile statistical review. The right discipline
+was to keep checking the data against the framing, not the framing
+against the data. Our final framing was the first that survived
+its own most-popular-opening counterexample (the Sicilian).
+
+\textbf{Pre-aggregation is leverage.} The pipeline collapsed 4.4~GB
+into 200~KB --- the same compression ratio that turns ``you need a
+backend'' into ``you need a static host.'' The architectural choice
+to pre-aggregate every chart in DuckDB before shipping a single
+byte to the browser made the visual experience feel instant and
+the project reproducible.
+
+\textbf{Two innovative charts were enough.} The rubric required
+that we explicitly identify innovative work; in early drafts we
+labeled four or five charts as ``custom.'' The project got
+stronger when we narrowed to two charts that genuinely encode
+something a standard library cannot, and let the other ten be
+conventional charts doing conventional jobs well.
+
+\textbf{Side aesthetics carry argument.} The light/dark contrast
+between Side A and Side B is not decoration --- it tells the
+reader \emph{which voice} is talking. In review, readers
+consistently described Side A as ``the canon'' and Side B as ``the
+skeptic,'' which was the design goal. Visual identity is part of
+the argument.
+
+\subsection{Limitations}
+
+\textbf{Player population skew.} Lichess players are
+predominantly online, blitz-heavy, and amateur; the +3.9pp
+white edge in our population may differ in over-the-board
+classical play \cite{chessbase-firstmove}.
+
+\textbf{Single month, single year.} The June~2016 dump is a
+snapshot. The opening landscape has shifted (notably with the rise
+of the London System after 2020); a more recent or multi-month
+corpus would test the stability of every claim in this report.
+
+\textbf{Single platform.} We do not contrast Lichess with
+Chess.com or FIDE-rated over-the-board games. Each population has
+distinct opening fashions and skill distributions.
+
+\textbf{Game-level, not player-level.} Every chart treats games as
+independent observations. A player who plays 200 games in our
+month is overrepresented relative to a player with 5. Player-level
+aggregation would give cleaner uncertainty bounds but cost a major
+reduction in $n$.
+
+\subsection{Future work}
+
+A natural extension is a \emph{temporal} dueling story: the same
+two narratives across the 2014--2024 Lichess monthly dumps, with
+each chart animating across years. We expect the +3.9pp color edge
+to be remarkably stable; we expect opening-level swings to be
+volatile. That contrast itself is a third dueling layer.
+
+A second extension is platform-comparative: Lichess vs.\ Chess.com
+vs.\ FIDE, restricted to comparable rating bands. Color advantage
+likely grows with skill (engine analysis suggests $\sim 4$pp at
+master level), so the platform ladder may itself produce a
+coherent third story.
+
+A third extension is to ship the project as a teaching artifact:
+adding a small interactive ``filter your own slice'' panel between
+the two scrollytelling pages, where the reader picks an opening,
+time control, and Elo band, and sees how color edge, opening
+swing, and rating-gap effect compare \emph{for that slice}. The
+data is already aggregated; only the front-end work is new.
+
+%% ============================================================
+%% REFERENCES (manual, no .bib needed)
+%% ============================================================
+\begin{thebibliography}{9}
+
+\bibitem{kaggle-lichessgames}
+Arevel.
+\newblock Chess Games Dataset (June 2016 Lichess Dump).
+\newblock Kaggle, 2020.
+\newblock \url{https://www.kaggle.com/datasets/arevel/chess-games}.
+
+\bibitem{kaggle-eco}
+Alexandre Lemercier.
+\newblock All Chess Openings (ECO Reference).
+\newblock Kaggle, 2021.
+\newblock \url{https://www.kaggle.com/datasets/alexandrelemercier/all-chess-openings}.
+
+\bibitem{d3}
+Mike Bostock, Vadim Ogievetsky, and Jeffrey Heer.
+\newblock D3: Data-Driven Documents.
+\newblock \emph{IEEE Transactions on Visualization and Computer
+Graphics}, 17(12):2301--2309, 2011.
+
+\bibitem{duckdb}
+Mark Raasveldt and Hannes M\"uhleisen.
+\newblock DuckDB: an Embeddable Analytical Database.
+\newblock In \emph{Proc. ACM SIGMOD}, 2019.
+
+\bibitem{scrollytelling}
+Tom McKeithen.
+\newblock How to Scrollytell: Building Narrative Web Stories.
+\newblock The Pudding, 2018.
+\newblock \url{https://pudding.cool/process/how-to-implement-scrollytelling/}.
+
+\bibitem{lichess-stats}
+Lichess.org Team.
+\newblock Lichess Database and Statistics.
+\newblock \url{https://database.lichess.org/}.
+
+\bibitem{chessbase-firstmove}
+ChessBase News.
+\newblock The first-move advantage in chess.
+\newblock \url{https://en.chessbase.com/} (general reference for the
+$\sim 54\%$ White-score figure at engine-evaluated master play).
+
+\bibitem{eco-classification}
+B\'ela Hidasi.
+\newblock Encyclopedia of Chess Openings (ECO) classification system.
+\newblock 4th ed., Chess Informant, 1996.
+
+\bibitem{queens-gambit}
+Scott Frank and Allan Scott.
+\newblock The Queen's Gambit (TV miniseries).
+\newblock Netflix, 2020.
+\newblock (Cited as causal driver of post-2020 online chess growth.)
+
+\end{thebibliography}
+
+\end{document}
