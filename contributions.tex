@@ -1,0 +1,212 @@
+%% CSE 578 Final Project. Individual Contributions Report.
+%% Companion to report.tex. Two pages max. Compile with pdfLaTeX.
+
+\documentclass[sigconf,nonacm,natbib=false]{acmart}
+
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\begin{document}
+
+\title{Individual Contributions Report}
+\subtitle{Color is Destiny, or is it? CSE 578 Final Project, Team 7}
+
+\author{Mathew Abraham Palliambil}
+\affiliation{\institution{Arizona State University}}
+\email{mpalliam@asu.edu}
+
+\author{Asmit Datta}
+\affiliation{\institution{Arizona State University}}
+\email{adatta18@asu.edu}
+
+\author{Basil Shibu Thomas}
+\affiliation{\institution{Arizona State University}}
+\email{bthoma70@asu.edu}
+
+\author{Kruthika Kadurhalli Raghu}
+\affiliation{\institution{Arizona State University}}
+\email{kkadurha@asu.edu}
+
+\author{Chandana Priya Srinivasa}
+\affiliation{\institution{Arizona State University}}
+\email{csrini10@asu.edu}
+
+\author{Parth Jain}
+\affiliation{\institution{Arizona State University}}
+\email{pjain121@asu.edu}
+
+\renewcommand{\shortauthors}{Team 7}
+
+\maketitle
+
+%% ============================================================
+\section{Team Split}
+%% ============================================================
+
+The six member team divided into two sub-teams of three. Side~A
+(\emph{Color is Destiny}, charts A1 to A6) was carried by Mathew,
+Asmit, and Basil. Side~B (\emph{Color is Irrelevant}, charts B1 to
+B6) was carried by Kruthika, Chandana, and Parth. Three members
+held additional cross-cutting roles: Mathew led project
+coordination, Asmit led web development and chart implementation,
+and Basil led visual and poster design.
+
+For each owned chart, the responsible member proposed the
+analytical question, specified the SQL aggregation, drafted the
+on-page narrative copy, and validated the rendered chart against
+the intended argument. Asmit then compiled each member's chart
+work into a single scrollytelling webpage.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Member} & \textbf{Charts} & \textbf{Cross-cutting role} \\
+\midrule
+Mathew A.\ Palliambil  & A2, A4 & Project lead \\
+Asmit Datta            & A1, A6 & Lead developer, web integration \\
+Basil Shibu Thomas     & A3, A5 & Poster and visual design \\
+Kruthika K.\ Raghu     & B1, B5 & Side B analysis \\
+Chandana P.\ Srinivasa & B2, B3 & Side B analysis \\
+Parth Jain             & B4, B6 & Side B analysis \\
+\bottomrule
+\end{tabular}
+\caption{Sub-team split and roles.}
+\label{tab:roles}
+\end{table}
+
+%% ============================================================
+\section{Mathew Abraham Palliambil}
+%% ============================================================
+\textbf{Email:} \texttt{mpalliam@asu.edu}.
+\textbf{Role:} project lead.
+
+Mathew owned the project plan from kickoff to submission. He
+decomposed the rubric into deliverables (data, pipeline, narrative,
+12 charts, two innovative views, scrollytelling site, poster,
+report), assigned ownership, and maintained the running checklist
+that anchored every check-in. When the team pivoted twice
+(Aggressive vs.\ Defensive, then Theory vs.\ Weird, then Color is
+Destiny), he rebuilt the task plan and reallocated chart ownership
+so the schedule absorbed the pivot.
+
+\textbf{Charts.}
+A2 (White edge across Elo bands): designed the question and the
+per-band aggregation.
+A4 (Top White-winning openings, treemap): set the volume threshold
+($\geq 2{,}000$ games) and authored the ``deep bench'' framing.
+
+%% ============================================================
+\section{Asmit Datta}
+%% ============================================================
+\textbf{Email:} \texttt{adatta18@asu.edu}.
+\textbf{Role:} lead developer and web integration.
+
+Asmit compiled each team member's chart work into a single
+scrollytelling webpage. He took each owner's analytical
+specification and narrative copy and integrated them into the live
+site. Concretely, he wrote the DuckDB preprocessing script
+(\texttt{preprocess\_color.py}) that reduces the 4.4~GB CSV to 13
+small JSONs, built the static site
+(\texttt{index.html}, \texttt{side\_a.html}, \texttt{side\_b.html}),
+implemented the scrollytelling controller on
+\texttt{IntersectionObserver}, and rendered the 12 D3.js v7 charts
+from the per-chart specifications produced by their owners. He also
+implemented the A3 to A6 cross-chart click-jump and set up the Git
+repository and reproducibility instructions.
+
+\textbf{Charts.}
+A1 (Headline bar): defined the 50.4 / 3.1 / 46.5 split that anchors
+the site.
+A6 (Tug-of-War, innovative): co-designed the rope-and-knot encoding
+across 13 categorical cuts on a single shared axis and implemented
+its geometry in D3.
+
+%% ============================================================
+\section{Basil Shibu Thomas}
+%% ============================================================
+\textbf{Email:} \texttt{bthoma70@asu.edu}.
+\textbf{Role:} poster and visual design.
+
+Basil owned the visual identity of the project. He designed the
+25\,$\times$\,30 inch final poster end to end: layout, typography,
+color, the side-by-side Side~A and Side~B split, the headline
+callouts (+3.9, 19, 61, 0.9, 0.4), and the team strip. He also
+defined the shared palette and the aesthetic contrast between the
+two scrollytelling sides (a near-white serif voice for Side~A and a
+dark editorial voice for Side~B), so a viewer can tell which side
+they are reading at a glance.
+
+\textbf{Charts.}
+A3 (Edge across time controls): designed the
+bullet/blitz/rapid/classical comparison.
+A5 (White-mate heatmap): chose the \texttt{interpolateYlOrRd} ramp
+so heat reads against the page background, replacing an earlier
+greyscale version that vanished.
+
+%% ============================================================
+\section{Kruthika Kadurhalli Raghu}
+%% ============================================================
+\textbf{Email:} \texttt{kkadurha@asu.edu}.
+\textbf{Role:} Side~B analysis.
+
+\textbf{Charts.}
+B1 (Waffle, ``out of 100''): designed the reframing that converts
+the same +3.9pp number Side~A opens with into Side~B's
+philosophical pivot (4 cells color, 96 cells everything else).
+B5 (Rating-gap stacked bars): specified the seven-bucket ladder on
+\texttt{WhiteElo} minus \texttt{BlackElo} and surfaced the project's
+killer comparison: a 61.2pp swing across rating gap versus 3.9pp
+across color. B5 is the chart that quantitatively closes Side~B.
+
+%% ============================================================
+\section{Chandana Priya Srinivasa}
+%% ============================================================
+\textbf{Email:} \texttt{csrini10@asu.edu}.
+\textbf{Role:} Side~B analysis.
+
+\textbf{Charts.}
+B2 (Black's weapons, grouped bars): curated the six classic Black
+defenses (Sicilian, French, Caro-Kann, Scandinavian, Pirc, Modern)
+and surfaced the Sicilian flip, the most-played opening in the
+band where Black wins more than White.
+B3 (Diverging extremes): specified the dual-CTE query for the top
+five most-Black-favoring and top five most-White-favoring openings
+($n \geq 500$), producing the visual swing of roughly 140pp.
+
+%% ============================================================
+\section{Parth Jain}
+%% ============================================================
+\textbf{Email:} \texttt{pjain121@asu.edu}.
+\textbf{Role:} Side~B analysis.
+
+\textbf{Charts.}
+B4 (Bubble scatter, 60-opening spectrum): specified the
+top-60-by-volume cutoff and the $x$=White~win\%, $y$=games,
+size=games encoding, plus the click-to-pin interaction.
+B6 (Factor variance, innovative): co-designed the project's
+headline analytical chart, which compares the spread of White's
+win\% across each candidate predictor. The output (color 3.9pp,
+time control 0.4pp, Elo band 0.9pp, opening 19.1pp, rating diff
+61.2pp) is the literal proof of the project's thesis.
+
+%% ============================================================
+\section{Joint Work and Effort}
+%% ============================================================
+
+The narrative pivots, the two innovative-chart concepts (A6
+Tug-of-War and B6 Factor Variance), and the written report were
+team-wide. Every chart was reviewed by at least one member outside
+its owning sub-team before being considered final. Each member
+contributed an estimated equal share of total project effort, with
+the cross-cutting roles balancing the additional analytical
+specification carried by the Side~B members on their charts.
+
+\end{document}
