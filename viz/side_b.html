@@ -47,8 +47,8 @@
   section.beat .chart svg{width:100%;height:auto;display:block;overflow:visible;}
   .axis line,.axis path{stroke:#2a3140;}
   .axis text{fill:var(--mute);font-size:11px;}
-  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--mute);margin-top:10px;flex-wrap:wrap;}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;}
+  .legend{display:flex;justify-content:center;gap:18px;font-size:12.5px;color:#cbd1de;margin-top:12px;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);}
   .interactive{padding:8px 12px;background:#0d121a;border-radius:8px;font-size:12px;color:#cbd1de;margin-top:10px;}
   .interactive::before{content:"⌘ ";color:var(--bSide);}
 
@@ -197,7 +197,7 @@
       <span class="pill active" data-sort="value">Sort by impact</span>
       <span class="pill" data-sort="alpha">Sort A–Z</span>
     </div>
-    <svg id="B6" viewBox="0 0 540 340"></svg>
+    <svg id="B6" viewBox="0 0 540 360"></svg>
     <div class="legend">
       <span>Each bar = the <strong>spread</strong> in White-win % when you split games by that factor.</span>
     </div>
@@ -348,7 +348,7 @@ function drawB4(data){
   // 50% line
   svg.append('line').attr('x1',x(50)).attr('x2',x(50)).attr('y1',M.t).attr('y2',H-M.b)
     .attr('stroke','#5fb1ff').attr('stroke-dasharray','4 3').attr('opacity',0.4);
-  svg.append('text').attr('x',x(50)+4).attr('y',M.t+12).attr('fill','#5fb1ff').attr('font-size',10).text('50% (fair)');
+  svg.append('text').attr('x',x(50)+4).attr('y',H-M.b-6).attr('fill','#5fb1ff').attr('font-size',10).text('50% (fair)');
   // dots
   const sel = svg.selectAll('circle').data(data).join('circle')
     .attr('cx',d=>x(d.white_pct)).attr('cy',d=>y(d.games))
@@ -418,7 +418,9 @@ function renderB6(sortMode){
   svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},0)`)
     .call(d3.axisLeft(y));
   svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`)
-    .call(d3.axisBottom(x).ticks(7).tickFormat(d=>d+'pp spread'));
+    .call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+'pp'));
+  svg.append('text').attr('x',(M.l + (W-M.r))/2).attr('y',H+14).attr('text-anchor','middle')
+    .attr('fill','#cbd1de').attr('font-size',11).text('spread  →');
   data.forEach((d,i)=>{
     const yy=y(d.factor);
     const isColor = d.factor.startsWith('Color');

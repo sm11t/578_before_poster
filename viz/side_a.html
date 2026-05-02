@@ -48,8 +48,8 @@
   section.beat .chart svg{width:100%;height:auto;display:block;overflow:visible;}
   .axis line,.axis path{stroke:#2a3140;}
   .axis text{fill:var(--mute);font-size:11px;}
-  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--mute);margin-top:10px;flex-wrap:wrap;}
-  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;}
+  .legend{display:flex;justify-content:center;align-items:center;gap:18px;font-size:12.5px;color:#cbd1de;margin-top:12px;flex-wrap:wrap;}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:middle;border:1px solid rgba(255,255,255,0.08);}
   .interactive{padding:8px 12px;background:#0d121a;border-radius:8px;font-size:12px;color:#cbd1de;margin-top:10px;}
   .interactive::before{content:"⌘ ";color:#ffffff;}
 
@@ -110,8 +110,8 @@
     <svg id="A1" viewBox="0 0 540 240"></svg>
     <div class="legend">
       <span><i style="background:#f1f1f1"></i>White wins</span>
-      <span><i style="background:#7d8597"></i>Draw</span>
-      <span><i style="background:#3b3f4c"></i>Black wins</span>
+      <span><i style="background:#e0a23c"></i>Draw</span>
+      <span><i style="background:#6b7280"></i>Black wins</span>
     </div>
     <div class="interactive">Hover any bar for exact game counts.</div>
   </div>
@@ -129,8 +129,8 @@
     <svg id="A2" viewBox="0 0 540 280"></svg>
     <div class="legend">
       <span><i style="background:#f1f1f1"></i>White wins</span>
-      <span><i style="background:#7d8597"></i>Draw</span>
-      <span><i style="background:#3b3f4c"></i>Black wins</span>
+      <span><i style="background:#e0a23c"></i>Draw</span>
+      <span><i style="background:#6b7280"></i>Black wins</span>
     </div>
     <div class="interactive">Hover the lines for game counts per band.</div>
   </div>
@@ -148,8 +148,8 @@
     <svg id="A3" viewBox="0 0 540 280"></svg>
     <div class="legend">
       <span><i style="background:#f1f1f1"></i>White</span>
-      <span><i style="background:#7d8597"></i>Draw</span>
-      <span><i style="background:#3b3f4c"></i>Black</span>
+      <span><i style="background:#e0a23c"></i>Draw</span>
+      <span><i style="background:#6b7280"></i>Black</span>
     </div>
     <div class="interactive">Click a time-control to jump to its rope on the tug-of-war below.</div>
   </div>
@@ -165,8 +165,12 @@
   <div class="chart">
     <h3>A4 · White's strongest opening families (treemap)</h3>
     <svg id="A4" viewBox="0 0 540 360"></svg>
-    <div class="legend">
-      <span>Size = games · Brightness = White win %</span>
+    <div class="legend" style="align-items:center;gap:14px;flex-wrap:wrap;">
+      <span>Size = games</span>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <span>White win %</span>
+        <svg id="A4_legend" width="160" height="22" style="overflow:visible;"></svg>
+      </span>
     </div>
     <div class="interactive">Hover any tile for opening name + exact win rate.</div>
   </div>
@@ -182,6 +186,10 @@
   <div class="chart">
     <h3>A5 · White's mate rate · opening × Elo</h3>
     <svg id="A5" viewBox="0 0 540 320"></svg>
+    <div class="legend" style="flex-direction:column;align-items:center;gap:6px;margin-top:14px;">
+      <span style="font-size:12px;color:#cbd1de;letter-spacing:.04em;">White mate rate</span>
+      <svg id="A5_legend" width="240" height="28" style="display:block;width:240px;flex:0 0 auto;"></svg>
+    </div>
     <div class="interactive">Hover cells for game count + mate rate.</div>
   </div>
 </section>
@@ -205,7 +213,7 @@
     <svg id="A6" viewBox="0 0 540 460"></svg>
     <div class="legend">
       <span><i style="background:#f1f1f1"></i>Tug toward White</span>
-      <span><i style="background:#3b3f4c"></i>Tug toward Black</span>
+      <span><i style="background:#6b7280"></i>Tug toward Black</span>
     </div>
   </div>
 </section>
@@ -226,7 +234,7 @@
 
 <script>
 const F=(n,d=1)=>(+n).toFixed(d);
-const COL = {white:'#f1f1f1', draw:'#7d8597', black:'#3b3f4c'};
+const COL = {white:'#f1f1f1', draw:'#e0a23c', black:'#6b7280'};
 const tt = document.getElementById('tooltip');
 function showTip(html, x, y){ tt.innerHTML=html; tt.style.left=(x+12)+'px'; tt.style.top=(y+12)+'px'; tt.classList.add('show'); }
 function hideTip(){ tt.classList.remove('show'); }
@@ -328,7 +336,6 @@ function drawA3(data){
         .text(F(d[k],1)).attr('opacity',0).style('pointer-events','none').transition().delay(900).attr('opacity',1);
       cum+=d[k];
     });
-    svg.append('text').attr('x',x(d.tc_bucket)+x.bandwidth()/2).attr('y',H-M.b+22).attr('text-anchor','middle').attr('fill','#7d8597').attr('font-size',10).text(`n=${d.games.toLocaleString()}`);
     // re-add tooltip on the column (passes through transparent click rect)
     svg.append('rect').attr('x',x(d.tc_bucket)).attr('width',x.bandwidth())
       .attr('y',M.t).attr('height',H-M.b-M.t).attr('fill','transparent').style('pointer-events','all')
@@ -373,8 +380,8 @@ function drawA4(data){
   const svg=d3.select('#A4');
   const root=d3.hierarchy({children:data}).sum(d=>d.games);
   d3.treemap().size([W,H]).padding(2)(root);
-  const c=d3.scaleSequential([d3.min(data,d=>d.white_win_pct), d3.max(data,d=>d.white_win_pct)],
-    d3.interpolateRgb('#3a3a3a','#ffffff'));
+  const dMin = d3.min(data,d=>d.white_win_pct), dMax = d3.max(data,d=>d.white_win_pct);
+  const c=d3.scaleSequential([dMin, dMax], d3.interpolateOranges);
   const g=svg.selectAll('g').data(root.leaves()).join('g')
     .attr('transform',d=>`translate(${d.x0},${d.y0})`)
     .style('cursor','pointer')
@@ -383,12 +390,35 @@ function drawA4(data){
   g.append('rect').attr('width',d=>d.x1-d.x0).attr('height',d=>d.y1-d.y0)
     .attr('fill',d=>c(d.data.white_win_pct)).attr('rx',3)
     .attr('opacity',0).transition().delay((d,i)=>i*30).duration(600).attr('opacity',1);
-  g.append('text').attr('x',6).attr('y',16)
-    .attr('fill','#0a0d14').attr('font-size',11).attr('font-weight',700)
-    .text(d=>{ const w=d.x1-d.x0; return w>110 ? d.data.opening_family : (w>60 ? d.data.opening_family.slice(0,12)+'…' : ''); });
-  g.append('text').attr('x',6).attr('y',32)
-    .attr('fill','#0a0d14').attr('font-size',12).attr('font-weight',800)
-    .text(d=>(d.x1-d.x0)>60 ? F(d.data.white_win_pct,1)+'%' : '');
+  // smart text: hide on tiny tiles; ellipsize to fit width; flip text color on dark fills
+  g.each(function(d){
+    const w = d.x1 - d.x0, h = d.y1 - d.y0;
+    if(w < 36 || h < 22) return;
+    const t = (d.data.white_win_pct - dMin) / Math.max(0.001, dMax - dMin);
+    const fg = t > 0.55 ? '#fff5eb' : '#0a0d14';
+    const charW = 6.4;
+    const maxChars = Math.max(2, Math.floor((w - 12) / charW));
+    const fullName = d.data.opening_family;
+    const name = fullName.length > maxChars
+      ? fullName.slice(0, Math.max(1, maxChars - 1)) + '…'
+      : fullName;
+    const sel = d3.select(this);
+    sel.append('text').attr('x',6).attr('y',15)
+      .attr('fill',fg).attr('font-size',11).attr('font-weight',600)
+      .style('pointer-events','none').text(name);
+    if(h > 32 && w > 50)
+      sel.append('text').attr('x',6).attr('y',31)
+        .attr('fill',fg).attr('font-size',12).attr('font-weight',800)
+        .style('pointer-events','none').text(F(d.data.white_win_pct,1)+'%');
+  });
+  // gradient legend
+  const legSvg = d3.select('#A4_legend');
+  legSvg.selectAll('*').remove();
+  const grad = legSvg.append('defs').append('linearGradient').attr('id','A4grad').attr('x1','0%').attr('x2','100%');
+  d3.range(0,1.001,0.1).forEach(s=>grad.append('stop').attr('offset',(s*100)+'%').attr('stop-color',d3.interpolateOranges(s)));
+  legSvg.append('rect').attr('x',0).attr('y',0).attr('width',160).attr('height',8).attr('fill','url(#A4grad)').attr('rx',2);
+  legSvg.append('text').attr('x',0).attr('y',20).attr('fill','#7d8597').attr('font-size',10).text(F(dMin,1)+'%');
+  legSvg.append('text').attr('x',160).attr('y',20).attr('text-anchor','end').attr('fill','#7d8597').attr('font-size',10).text(F(dMax,1)+'%');
 }
 
 // ===== A5 heatmap (interactive) =====
@@ -410,6 +440,15 @@ function drawA5(data){
     .transition().delay((d,i)=>i*15).duration(500).attr('opacity',1);
   svg.append('g').attr('class','axis').attr('transform',`translate(0,${H-M.b})`).call(d3.axisBottom(x).tickFormat(d=>'Elo '+d));
   svg.append('g').attr('class','axis').attr('transform',`translate(${M.l},0)`).call(d3.axisLeft(y).tickFormat(d=>d.length>18?d.slice(0,18)+'…':d));
+  // gradient legend
+  const lMax = d3.max(data,d=>d.white_mate_pct)||1;
+  const legSvg = d3.select('#A5_legend');
+  legSvg.selectAll('*').remove();
+  const grad = legSvg.append('defs').append('linearGradient').attr('id','A5grad').attr('x1','0%').attr('x2','100%');
+  d3.range(0,1.001,0.1).forEach(s=>grad.append('stop').attr('offset',(s*100)+'%').attr('stop-color',d3.interpolateYlOrRd(s)));
+  legSvg.append('rect').attr('x',0).attr('y',2).attr('width',240).attr('height',10).attr('fill','url(#A5grad)').attr('rx',2);
+  legSvg.append('text').attr('x',0).attr('y',24).attr('fill','#cbd1de').attr('font-size',10).text('0%');
+  legSvg.append('text').attr('x',240).attr('y',24).attr('text-anchor','end').attr('fill','#cbd1de').attr('font-size',10).text(F(lMax,1)+'%');
 }
 
 // ===== A6 INNOVATIVE: Tug of War (custom + interactive filters) =====
